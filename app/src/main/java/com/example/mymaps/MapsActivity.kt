@@ -3,6 +3,7 @@ import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -21,10 +22,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+        setSupportActionBar(findViewById(R.id.toolbar))
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //adds items to the action bar
+        menuInflater.inflate(R.menu.top_bar, menu)
+        return true
     }
     /**
      * Manipulates the map once available.
