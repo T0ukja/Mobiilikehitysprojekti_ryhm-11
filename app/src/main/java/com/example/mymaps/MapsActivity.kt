@@ -1,4 +1,5 @@
 package com.example.mymaps
+
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,21 +32,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         //adds items to the action bar
-        menuInflater.inflate(R.menu.top_bar, menu)
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
         return true
     }
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val markerBitmap = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)?.toBitmap()
+        val markerBitmap =
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+                ?.toBitmap()
         val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
 
         // Add a marker in Sydney and move the camera
@@ -56,7 +52,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         try {
             val success = googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.joku))
+                    this, R.raw.joku
+                )
+            )
 
             if (!success) {
                 Log.e("MapsActivity", "Style parsing failed.")
