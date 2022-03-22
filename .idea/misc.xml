@@ -8,10 +8,21 @@
         <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/activity_maps.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/cloud_styling_basic_demo.xml" value="0.2" />
         <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/raw_mapview_demo.xml" value="0.1" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/drawable/ic_baseline_add_comment_24.xml" value="0.1" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/drawable/ic_round_person_24.xml" value="0.1" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_maps.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/fragment_rafla.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/nav_header.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/menu/drawer_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/menu/top_bar.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/menu/top_bar_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+        <entry key="..\:/Users/konst/bar_app/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_maps.xml" value="0.20969202898550723" />
+        <entry key="..\:/Users/konst/bar_app/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/menu/top_bar.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
