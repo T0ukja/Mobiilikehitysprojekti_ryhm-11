@@ -1,4 +1,4 @@
-package com.example.mymaps
+package com.example.getrestaurantdata
 
 import org.junit.Test
 

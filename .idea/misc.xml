@@ -3,11 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/drawable/dsadasd.xml" value="0.2109375" />
-        <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/drawable/ic_baseline_local_bar_24.xml" value="0.10989583333333333" />
-        <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/activity_maps.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/cloud_styling_basic_demo.xml" value="0.2" />
-        <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/raw_mapview_demo.xml" value="0.1" />
+        <entry key="..\:/Users/Janne/StudioProjects/getrestaurantdata/app/src/main/res/layout/activity_main.xml" value="0.19479166666666667" />
       </map>
     </option>
   </component>
