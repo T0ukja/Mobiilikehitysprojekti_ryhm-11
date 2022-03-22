@@ -6,5 +6,7 @@
         android:icon="@drawable/ic_round_person_24"
         app:showAsAction="always"
         android:title="" />
-    <item android:title="Login" />
+    <item
+        android:id="@+id/icLogin"
+        android:title="Login" />
 </menu>
