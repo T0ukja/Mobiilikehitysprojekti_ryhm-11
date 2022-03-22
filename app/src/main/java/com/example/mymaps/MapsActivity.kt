@@ -1,10 +1,12 @@
 package com.example.mymaps
 
+import android.content.Intent
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,6 +36,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //adds items to the action bar
         menuInflater.inflate(R.menu.top_bar_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.icLogin -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                return true
+            }else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
