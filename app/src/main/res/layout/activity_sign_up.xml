@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
 
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
     <EditText
         android:id="@+id/etUsernameSU"
         android:layout_width="match_parent"
