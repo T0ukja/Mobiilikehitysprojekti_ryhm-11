@@ -61,31 +61,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
 
         mMap = googleMap
-//        for (i in 0 until latLngListsize()) mMap.getProjection()
-//            .getVisibleRegion().latLngBounds.contains(
-//                LatLng(latLngListsize.get(i).getLatitude(), latLngListsize.get(i).getLongitude()))
 
-
-//        val curScreen: LatLngBounds = googleMap.projection
-//            .visibleRegion.latLngBounds
-
-//        google.maps.event.addListener(map, 'zoom_changed', function() {
-//            var zoom = map.getZoom();
-//            if (zoom <= 15) {
-//                marker.setMap(null);
-//            } else {
-//                marker.setMap(map);
-//            }
-//        });
         val bounds: LatLngBounds =
             mMap.getProjection().getVisibleRegion().latLngBounds
 
         getAllData(bounds)
 
-        // Add a marker in Sydney and move the camera
-        //  val oulu = LatLng(65.012360, 25.468160)
-        //mMap!!.addMarker(MarkerOptions().position(oulu).title("Bar in Oulu").icon(icon))
-        //  mMap!!.moveCamera(CameraUpdateFactory.newLatLng(oulu))
 
         try {
             val success = googleMap.setMapStyle(
@@ -130,7 +111,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val location = address.first()
             return LatLng(location.latitude, location.longitude)
         } catch (e: Exception) {
-            // log.e(e, "getLocationByAddress")
+
         }
         return null
     }
@@ -140,8 +121,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     fun getAllData(bounds: LatLngBounds) {
-      // val firstRecord =
-           // "data/fi/api/3/action/datastore_search?q=anniskelu%20a&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=7991"
+
         val markerBitmap =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
                 ?.toBitmap()
@@ -152,32 +132,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     if (response.isSuccessful) {
                         var Datarecord = response.body()?.result?.records
-                      //  val Maxdata = response.body()?.result?.total?.toInt()
-                    //    var Nextlink = response.body()?.result?._links?.next
+
                         val koko = Datarecord?.size
 
 
                         val listofmodels = response.body()
-                        //data = response.body() as ArrayList<ValDataone>
-                        //  var json = JSONObject(listofmodels?.result?.toString()) // toString() is not the response body, it is a debug representation of the response body
-                        //
-                        //
-                        // var status = json.getString("KUNTA")
 
-//                    val jsonArray = JSONArray(response.body())
-                        // val jsonObject: JSONObject = jsonArray.getJSONObject(0)
-//                        for (i in 0 until Maxdata!! -1) {
-
-
-//
 
                         for (i in 0 until 5) {
                             response.body()?.result?.records?.get(i)
                                 ?.let {
 
                                     var osoite = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
-// Loop through your list of positions.
-                                    // If a position is inside of the bounds,
+
+
                                     if (bounds.contains(osoite!!)) {
                                         // Add the marker.
                                         mMap!!.addMarker(MarkerOptions().position(
@@ -208,9 +176,6 @@ else{
             })
         }
 
-
-        // Check to see if your GoogleMap variable exists.
-        // Check to see if your GoogleMap variable exists.
 
     }
 

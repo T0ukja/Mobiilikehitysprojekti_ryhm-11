@@ -15,17 +15,6 @@ private const val BASE_URL = "https://www.avoindata.fi/"
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 private val retrofit = Retrofit.Builder().addConverterFactory(MoshiConverterFactory.create(moshi)).baseUrl(BASE_URL).build()
 
-
-
-/*
-Tarvitaan joku foreach mikä käsittelee arvot 100 välein
-Seuraava get linkki tarjotaan edellisestä "next kohdasta ja asetetaan arvo"
-arvot luetaan ja lisätään johonkin arrayhyn
-Sitten kun kaikki arvot luettu, muutetaan osoitteet koordinaatteiksi ja asetetaan kartalle
-
-
-
- */
 interface ApiService {
 
     @GET("data/fi/api/3/action/datastore_search?q=anniskelu%20a&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=7991")
