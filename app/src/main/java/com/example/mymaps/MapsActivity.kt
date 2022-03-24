@@ -100,7 +100,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
         }
+        if (mMap != null) {
+            // Respond to camera movements.
+            mMap.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener {
+                // Get the current bounds of the map's visible region.
+                var float = mMap.getCameraPosition().zoom
+                Log.d("Testi","Kamera liikkuu")
+                Log.d("Kamera", float.toString())
+                if(float > 7.5) {
 
+
+                    val bounds: LatLngBounds =
+                        mMap.getProjection().getVisibleRegion().latLngBounds
+                    getAllData(bounds)
+                }
+
+                else{
+                    mMap.clear()
+                }
+            })
+
+        }
     }
 
     fun getLocationByAddress(context: Context, strAddress: String?): LatLng? {
@@ -114,6 +134,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         return null
     }
+
+
+
+
 
     fun getAllData(bounds: LatLngBounds) {
       // val firstRecord =
@@ -151,45 +175,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             response.body()?.result?.records?.get(i)
                                 ?.let {
 
-                                    var kyrpa = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
+                                    var osoite = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
 // Loop through your list of positions.
                                     // If a position is inside of the bounds,
-                                    if (bounds.contains(kyrpa!!)) {
+                                    if (bounds.contains(osoite!!)) {
                                         // Add the marker.
                                         mMap!!.addMarker(MarkerOptions().position(
-                                            kyrpa)
+                                            osoite)
                                             .title(it.NIMI).icon(icon))
 
                                     }
-
+else{
+    mMap.clear()
+                                    }
 
                                 }
 
 
-//                        for (i in 0 until 30) {
-//                            response.body()?.result?.records?.get(i)
-//                                ?.let {
-//
-////                                    Log.d("JSON Nimi :", it.NIMI)
-////                                    Log.d("JSON ID :", it._id.toString())
-////                                    Log.d("OSOITE JSON", it.OSOITE)
-////                                    Log.d("JSON Kunta :", it.KUNTA)
-//                                    mMap!!.addMarker(MarkerOptions().position(getLocationByAddress(this@MapsActivity,it.OSOITE)!!).title(it.NIMI).icon(icon))
-//
-//
-//
-//                                }
 
                         }
                         Log.i("Paljonko on haettu, JSON", koko.toString())
-                     //   Log.i("Seuraava linkki JSON", Nextlink.toString())
-                     //   Log.i("Montako ravintolaa, JSON", Maxdata.toString())
-
-
-                        // Log.d("json :", Datarecord?.get(Datarecord.size-1).toString())
-                        // Log.d("jjson", Datarecord?.get(Datarecord.size-2).toString())
-                        //Log.d("KUNTAAA :", jsonObject.getString("KUNTA"))
-                        // println(response.body())
 
                     }
 
@@ -206,15 +211,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Check to see if your GoogleMap variable exists.
         // Check to see if your GoogleMap variable exists.
-        if (mMap != null) {
-            // Respond to camera movements.
-            mMap.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener {
-                // Get the current bounds of the map's visible region.
-                val bounds: LatLngBounds =
-                       mMap.getProjection().getVisibleRegion().latLngBounds
-                getAllData(bounds)
-            })
-        }
+
     }
 
 
