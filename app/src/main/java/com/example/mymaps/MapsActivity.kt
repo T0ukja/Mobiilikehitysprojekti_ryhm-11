@@ -1,4 +1,3 @@
-
 package com.example.mymaps
 
 import android.content.Context
@@ -13,14 +12,10 @@ import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.example.getrestaurantdata.ValDataone
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +23,10 @@ import retrofit2.Response
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+
+    fun GoogleMap.isMarkerVisible(markerPosition: LatLng) =
+        projection.visibleRegion.latLngBounds.contains(markerPosition)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +47,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.icLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 return true
-            }else -> super.onOptionsItemSelected(item)
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -61,27 +61,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
 
         mMap = googleMap
+//        for (i in 0 until latLngListsize()) mMap.getProjection()
+//            .getVisibleRegion().latLngBounds.contains(
+//                LatLng(latLngListsize.get(i).getLatitude(), latLngListsize.get(i).getLongitude()))
 
 
+//        val curScreen: LatLngBounds = googleMap.projection
+//            .visibleRegion.latLngBounds
 
-        google.maps.event.addListener(map, 'zoom_changed', function() {
-            var zoom = map.getZoom();
-            if (zoom <= 15) {
-                marker.setMap(null);
-            } else {
-                marker.setMap(map);
-            }
-        });
+//        google.maps.event.addListener(map, 'zoom_changed', function() {
+//            var zoom = map.getZoom();
+//            if (zoom <= 15) {
+//                marker.setMap(null);
+//            } else {
+//                marker.setMap(map);
+//            }
+//        });
+        val bounds: LatLngBounds =
+            mMap.getProjection().getVisibleRegion().latLngBounds
 
-
-
-
-        getAllData()
+        getAllData(bounds)
 
         // Add a marker in Sydney and move the camera
-      //  val oulu = LatLng(65.012360, 25.468160)
+        //  val oulu = LatLng(65.012360, 25.468160)
         //mMap!!.addMarker(MarkerOptions().position(oulu).title("Bar in Oulu").icon(icon))
-      //  mMap!!.moveCamera(CameraUpdateFactory.newLatLng(oulu))
+        //  mMap!!.moveCamera(CameraUpdateFactory.newLatLng(oulu))
 
         try {
             val success = googleMap.setMapStyle(
@@ -111,22 +115,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return null
     }
 
-    fun getAllData(){
-        val firstRecord = "data/fi/api/3/action/datastore_search?q=anniskelu%20a&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=7991"
+    fun getAllData(bounds: LatLngBounds) {
+      // val firstRecord =
+           // "data/fi/api/3/action/datastore_search?q=anniskelu%20a&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=7991"
         val markerBitmap =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
                 ?.toBitmap()
         val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
         with(Api) {
-            retrofitService.getAllData(firstRecord).enqueue(object: Callback<ValDataone> {
+            retrofitService.getAllData().enqueue(object : Callback<ValDataone> {
                 override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
 
-                    if(response.isSuccessful){
+                    if (response.isSuccessful) {
                         var Datarecord = response.body()?.result?.records
-                        val Maxdata = response.body()?.result?.total?.toInt()
-                        var Nextlink = response.body()?.result?._links?.next
+                      //  val Maxdata = response.body()?.result?.total?.toInt()
+                    //    var Nextlink = response.body()?.result?._links?.next
                         val koko = Datarecord?.size
-
 
 
                         val listofmodels = response.body()
@@ -139,24 +143,47 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //                    val jsonArray = JSONArray(response.body())
                         // val jsonObject: JSONObject = jsonArray.getJSONObject(0)
 //                        for (i in 0 until Maxdata!! -1) {
-                        for (i in 0 until 40) {
+
+
+//
+
+                        for (i in 0 until 5) {
                             response.body()?.result?.records?.get(i)
                                 ?.let {
 
-//                                    Log.d("JSON Nimi :", it.NIMI)
-//                                    Log.d("JSON ID :", it._id.toString())
-//                                    Log.d("OSOITE JSON", it.OSOITE)
-//                                    Log.d("JSON Kunta :", it.KUNTA)
-                                    mMap!!.addMarker(MarkerOptions().position(getLocationByAddress(this@MapsActivity,it.OSOITE)!!).title(it.NIMI).icon(icon))
+                                    var kyrpa = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
+// Loop through your list of positions.
+                                    // If a position is inside of the bounds,
+                                    if (bounds.contains(kyrpa!!)) {
+                                        // Add the marker.
+                                        mMap!!.addMarker(MarkerOptions().position(
+                                            kyrpa)
+                                            .title(it.NIMI).icon(icon))
 
+                                    }
 
 
                                 }
 
+
+//                        for (i in 0 until 30) {
+//                            response.body()?.result?.records?.get(i)
+//                                ?.let {
+//
+////                                    Log.d("JSON Nimi :", it.NIMI)
+////                                    Log.d("JSON ID :", it._id.toString())
+////                                    Log.d("OSOITE JSON", it.OSOITE)
+////                                    Log.d("JSON Kunta :", it.KUNTA)
+//                                    mMap!!.addMarker(MarkerOptions().position(getLocationByAddress(this@MapsActivity,it.OSOITE)!!).title(it.NIMI).icon(icon))
+//
+//
+//
+//                                }
+
                         }
                         Log.i("Paljonko on haettu, JSON", koko.toString())
-                        Log.i("Seuraava linkki JSON", Nextlink.toString())
-                        Log.i("Montako ravintolaa, JSON", Maxdata.toString())
+                     //   Log.i("Seuraava linkki JSON", Nextlink.toString())
+                     //   Log.i("Montako ravintolaa, JSON", Maxdata.toString())
 
 
                         // Log.d("json :", Datarecord?.get(Datarecord.size-1).toString())
@@ -173,6 +200,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     t.printStackTrace()
                     Log.i("virhe", "virhe");
                 }
+            })
+        }
+
+
+        // Check to see if your GoogleMap variable exists.
+        // Check to see if your GoogleMap variable exists.
+        if (mMap != null) {
+            // Respond to camera movements.
+            mMap.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener {
+                // Get the current bounds of the map's visible region.
+                val bounds: LatLngBounds =
+                       mMap.getProjection().getVisibleRegion().latLngBounds
+                getAllData(bounds)
             })
         }
     }

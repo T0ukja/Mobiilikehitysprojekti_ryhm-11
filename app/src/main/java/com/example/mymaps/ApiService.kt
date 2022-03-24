@@ -28,8 +28,8 @@ Sitten kun kaikki arvot luettu, muutetaan osoitteet koordinaatteiksi ja asetetaa
  */
 interface ApiService {
 
-    @GET("{address}")
-    fun getAllData(@Path("address") address: String): Call<ValDataone>
+    @GET("data/fi/api/3/action/datastore_search?q=anniskelu%20a&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=7991")
+    fun getAllData(): Call<ValDataone>
 
 
 }
