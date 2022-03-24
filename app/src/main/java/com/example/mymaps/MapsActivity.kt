@@ -1,7 +1,10 @@
+
 package com.example.mymaps
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -34,7 +37,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
- 
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -58,18 +62,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap = googleMap
 
+
+
+        google.maps.event.addListener(map, 'zoom_changed', function() {
+            var zoom = map.getZoom();
+            if (zoom <= 15) {
+                marker.setMap(null);
+            } else {
+                marker.setMap(map);
+            }
+        });
+
+
+
+
         getAllData()
 
-
-        val markerBitmap =
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
-                ?.toBitmap()
-        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-
         // Add a marker in Sydney and move the camera
-        val oulu = LatLng(65.012360, 25.468160)
-        mMap!!.addMarker(MarkerOptions().position(oulu).title("Bar in Oulu").icon(icon))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(oulu))
+      //  val oulu = LatLng(65.012360, 25.468160)
+        //mMap!!.addMarker(MarkerOptions().position(oulu).title("Bar in Oulu").icon(icon))
+      //  mMap!!.moveCamera(CameraUpdateFactory.newLatLng(oulu))
 
         try {
             val success = googleMap.setMapStyle(
@@ -87,11 +99,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
+    fun getLocationByAddress(context: Context, strAddress: String?): LatLng? {
+        val coder = Geocoder(context)
+        try {
+            val address = coder.getFromLocationName(strAddress, 5) ?: return null
+            val location = address.first()
+            return LatLng(location.latitude, location.longitude)
+        } catch (e: Exception) {
+            // log.e(e, "getLocationByAddress")
+        }
+        return null
+    }
 
     fun getAllData(){
         val firstRecord = "data/fi/api/3/action/datastore_search?q=anniskelu%20a&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=7991"
-
+        val markerBitmap =
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+                ?.toBitmap()
+        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
         with(Api) {
             retrofitService.getAllData(firstRecord).enqueue(object: Callback<ValDataone> {
                 override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
@@ -113,14 +138,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 //                    val jsonArray = JSONArray(response.body())
                         // val jsonObject: JSONObject = jsonArray.getJSONObject(0)
-                        for (i in 0 until Maxdata!! -1) {
+//                        for (i in 0 until Maxdata!! -1) {
+                        for (i in 0 until 40) {
                             response.body()?.result?.records?.get(i)
                                 ?.let {
 
-                                    Log.d("JSON Nimi :", it.NIMI)
-                                    Log.d("JSON ID :", it._id.toString())
-                                    Log.d("OSOITE JSON", it.OSOITE)
-                                    Log.d("JSON Kunta :", it.KUNTA)
+//                                    Log.d("JSON Nimi :", it.NIMI)
+//                                    Log.d("JSON ID :", it._id.toString())
+//                                    Log.d("OSOITE JSON", it.OSOITE)
+//                                    Log.d("JSON Kunta :", it.KUNTA)
+                                    mMap!!.addMarker(MarkerOptions().position(getLocationByAddress(this@MapsActivity,it.OSOITE)!!).title(it.NIMI).icon(icon))
+
+
+
                                 }
 
                         }
