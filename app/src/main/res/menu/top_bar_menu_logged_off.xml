@@ -3,11 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/ic_round_person_24"
-        android:id="@+id/profile"
-        app:showAsAction="always"
-        android:title="" />
-    <item
         android:id="@+id/icLogin"
-        android:title="Login" />
+        android:title="Login"
+        app:showAsAction="always"/>
 </menu>

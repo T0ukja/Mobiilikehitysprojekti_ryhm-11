@@ -21,7 +21,7 @@ class SignUpActivity : AppCompatActivity() {
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         //adds items to the action bar
-        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        menuInflater.inflate(R.menu.top_bar_menu_logged_in, menu)
         return true
     }
 }
