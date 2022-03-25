@@ -4,40 +4,28 @@ package com.example.mymaps
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-
+import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toolbar
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.view.MenuItem
-import android.widget.Button
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.material.navigation.NavigationView
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -45,6 +33,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
+    lateinit var toggle: ActionBarDrawerToggle
 
     companion object{
         private const val LOCATION_REQUEST_CODE = 1
@@ -55,7 +44,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         setSupportActionBar(findViewById(R.id.toolbar))
+        toggle = ActionBarDrawerToggle(this, findViewById(R.id.drawer_layout), R.string.open, R.string.close)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toggle.syncState()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
@@ -73,6 +64,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
         return when(item.itemId) {
             R.id.icLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
