@@ -68,6 +68,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             return true
         }
         return when(item.itemId) {
+            R.id.profile -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             R.id.icLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)

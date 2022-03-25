@@ -17,13 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".MapsActivity"/>
+        <activity
             android:name=".SignUpActivity"
             android:exported="false"
-            android:parentActivityName=".LoginActivity"/>
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".LoginActivity"
             android:exported="false"
-            android:parentActivityName=".MapsActivity"/>
+            android:parentActivityName=".MapsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
