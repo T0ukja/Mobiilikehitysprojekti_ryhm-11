@@ -11,11 +11,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
+import com.example.getrestaurantdata.Record
 import com.example.getrestaurantdata.ValDataone
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,12 +26,18 @@ import retrofit2.Response
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    lateinit var jsonresponsedata: List<Record>
+
 
     fun GoogleMap.isMarkerVisible(markerPosition: LatLng) =
         projection.visibleRegion.latLngBounds.contains(markerPosition)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+//        val markerBitmap =
+//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+//                ?.toBitmap()
+//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -62,10 +71,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap = googleMap
 
-        val bounds: LatLngBounds =
-            mMap.getProjection().getVisibleRegion().latLngBounds
 
-        getAllData(bounds)
+        getAllData()
 
 
         try {
@@ -76,7 +83,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
 
             if (!success) {
-                Log.e("MapsActivity", "Style parsing failed.")
+                Log.e("MapsActivity", "Style pajsonresponsedataing failed.")
             }
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
@@ -86,17 +93,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener {
                 // Get the current bounds of the map's visible region.
                 var float = mMap.getCameraPosition().zoom
-                Log.d("Testi","Kamera liikkuu")
+                Log.d("Testi", "Kamera liikkuu")
                 Log.d("Kamera", float.toString())
-                if(float > 7.5) {
+                if (float > 7.5) {
 
 
                     val bounds: LatLngBounds =
                         mMap.getProjection().getVisibleRegion().latLngBounds
-                    getAllData(bounds)
-                }
-
-                else{
+                    luearvot(bounds)
+                } else {
                     mMap.clear()
                 }
             })
@@ -104,80 +109,85 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun getLocationByAddress(context: Context, strAddress: String?): LatLng? {
-        val coder = Geocoder(context)
-        try {
-            val address = coder.getFromLocationName(strAddress, 5) ?: return null
-            val location = address.first()
-            return LatLng(location.latitude, location.longitude)
-        } catch (e: Exception) {
-
-        }
-        return null
-    }
-
-
-
-
-
-    fun getAllData(bounds: LatLngBounds) {
-
+    fun luearvot(bounds: LatLngBounds) {
         val markerBitmap =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
                 ?.toBitmap()
         val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-        with(Api) {
-            retrofitService.getAllData().enqueue(object : Callback<ValDataone> {
-                override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
+        for (i in 0 until 5) {
+            jsonresponsedata.get(i)
+                ?.let {
 
-                    if (response.isSuccessful) {
-                        var Datarecord = response.body()?.result?.records
-
-                        val koko = Datarecord?.size
+                    var osoite = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
 
 
-                        val listofmodels = response.body()
+                    if (bounds.contains(osoite!!)) {
+                        // Add the marker.
+                        mMap!!.addMarker(MarkerOptions().position(
+                            osoite)
+                            .title(it.NIMI).icon(icon))
+
+                    } else {
+                        mMap.clear()
+                    }
+
+                }
 
 
-                        for (i in 0 until 5) {
-                            response.body()?.result?.records?.get(i)
-                                ?.let {
+        }
+}
 
-                                    var osoite = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
+        fun getLocationByAddress(context: Context, strAddress: String?): LatLng? {
+            val coder = Geocoder(context)
+            try {
+                val address = coder.getFromLocationName(strAddress, 5) ?: return null
+                val location = address.first()
+                return LatLng(location.latitude, location.longitude)
+            } catch (e: Exception) {
 
-
-                                    if (bounds.contains(osoite!!)) {
-                                        // Add the marker.
-                                        mMap!!.addMarker(MarkerOptions().position(
-                                            osoite)
-                                            .title(it.NIMI).icon(icon))
-
-                                    }
-else{
-    mMap.clear()
-                                    }
-
-                                }
+            }
+            return null
+        }
 
 
+        fun getAllData() {
+
+
+            with(Api) {
+                retrofitService.getAllData().enqueue(object : Callback<ValDataone> {
+                    override fun onResponse(
+                        call: Call<ValDataone>,
+                        response: Response<ValDataone>
+                    ) {
+
+                        if (response.isSuccessful) {
+                            var Datarecord = response.body()?.result?.records
+                            val koko = Datarecord?.size
+
+                            jsonresponsedata = response.body()?.result!!.records
+
+                            val moshi = Moshi.Builder()
+                                .add(KotlinJsonAdapterFactory())
+                                .build()
+                            val jsonAdapter = moshi.adapter(ValDataone::class.java)
+
+                            Log.i("Paljonko on haettu, JSON", koko.toString())
 
                         }
-                        Log.i("Paljonko on haettu, JSON", koko.toString())
+
 
                     }
 
+                    override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+                        t.printStackTrace()
+                        Log.i("virhe", "virhe");
+                    }
+                })
+            }
 
-                }
 
-                override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-                    t.printStackTrace()
-                    Log.i("virhe", "virhe");
-                }
-            })
         }
 
 
     }
 
-
-}
