@@ -31,9 +31,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
     lateinit var toggle: ActionBarDrawerToggle
-    var loggedIn = false
+    var loggedIn = true
 
-    companion object{
+    companion object {
         private const val LOCATION_REQUEST_CODE = 1
     }
 
@@ -42,7 +42,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         setSupportActionBar(findViewById(R.id.toolbar))
-        toggle = ActionBarDrawerToggle(this, findViewById(R.id.drawer_layout), R.string.open, R.string.close)
+        toggle = ActionBarDrawerToggle(
+            this,
+            findViewById(R.id.drawer_layout),
+            R.string.open,
+            R.string.close
+        )
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toggle.syncState()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -55,10 +60,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if(loggedIn) {
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+/*        if (loggedIn) {
             menuInflater.inflate(R.menu.top_bar_menu_logged_in, menu)
         } else {
-            menuInflater.inflate(R.menu.top_bar_menu_logged_off, menu)
+            menuInflater.inflate(R.menu.top_bar_menu_logged_off_main, menu)
+        }*/
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (loggedIn) {
+            menu?.findItem(R.id.icLogin)?.setVisible(false)
+
+        } else {
+            menu?.findItem(R.id.profile)?.setVisible(false)
+            menu?.findItem(R.id.icLogOut)?.setVisible(false)
         }
         return true
     }
@@ -68,17 +85,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.profile -> {
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivity(intent)
                 return true
             }
             R.id.icLogin -> {
-                val intent = Intent(this, LoginActivity::class.java)
+                val intent =
+                    Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 return true
-            }else -> super.onOptionsItemSelected(item)
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -112,24 +131,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.setOnMarkerClickListener(this)
 
         setupMap()
-        
+
 
     }
-    private fun setupMap(){
+
+    private fun setupMap() {
 
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED){
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_REQUEST_CODE
+            )
             return
         }
         mMap.isMyLocationEnabled = true
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
 
-            if(location !=null){
+            if (location != null) {
                 lastLocation = location
                 val currentLatLong = LatLng(location.latitude, location.longitude)
                 //placeMarkerOnMap(currentLatLong)
@@ -138,11 +161,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    private fun placeMarkerOnMap(currentLatLng: LatLng){
+    private fun placeMarkerOnMap(currentLatLng: LatLng) {
         val markerOptions = MarkerOptions().position(currentLatLng)
         markerOptions.title("$currentLatLng")
         mMap.addMarker((markerOptions))
     }
 
-    override fun onMarkerClick(p0: Marker)= false
+    override fun onMarkerClick(p0: Marker) = false
 }

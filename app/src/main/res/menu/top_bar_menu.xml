@@ -2,6 +2,8 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="@string/item"
+        android:id="@+id/item1"/>
     <item
         android:icon="@drawable/ic_round_person_24"
         android:id="@+id/profile"
@@ -9,5 +11,10 @@
         android:title="" />
     <item
         android:id="@+id/icLogin"
-        android:title="@string/Login" />
+        android:title="Login"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/icLogOut"
+        android:title="LogOut"
+        app:showAsAction="always"/>
 </menu>

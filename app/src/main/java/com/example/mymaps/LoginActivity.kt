@@ -14,17 +14,22 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         val tvRegister = findViewById<TextView>(R.id.tvRegister)
-
         tvRegister.setOnClickListener() {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        //adds items to the action bar
-        menuInflater.inflate(R.menu.top_bar_menu_logged_in, menu)
-        return true
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.icLogin)?.setVisible(false)
+        menu?.findItem(R.id.profile)?.setVisible(false)
+        menu?.findItem(R.id.icLogOut)?.setVisible(false)
+        return super.onPrepareOptionsMenu(menu)
     }
 
 }
