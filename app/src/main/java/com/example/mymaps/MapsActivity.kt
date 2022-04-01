@@ -1,6 +1,5 @@
 package com.example.mymaps
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.location.Geocoder
@@ -17,27 +16,26 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-
     private lateinit var mMap: GoogleMap
-    lateinit var jsonresponsedata: List<Record>
+    var jsonresponsedata: List<Record> = mutableListOf()
+    var elementData: LatLng? = null
+    var secondPostalcode: String = ""
+    var addressList: MutableList<String> = mutableListOf()
 
+    lateinit var bounds: LatLngBounds
+//    fun GoogleMap.isMarkerVisible(markerPosition: LatLng) =
+//        projection.visibleRegion.latLngBounds.contains(markerPosition)
 
-    fun GoogleMap.isMarkerVisible(markerPosition: LatLng) =
-        projection.visibleRegion.latLngBounds.contains(markerPosition)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        val markerBitmap =
-//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
-//                ?.toBitmap()
-//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -72,9 +70,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
 
-        getAllData()
-
-
         try {
             val success = googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
@@ -83,111 +78,150 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
 
             if (!success) {
-                Log.e("MapsActivity", "Style pajsonresponsedataing failed.")
+                Log.e("MapsActivity", "Style parsing failed.")
             }
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
         }
         if (mMap != null) {
             // Respond to camera movements.
-            mMap.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener {
+            mMap.setOnCameraIdleListener {
                 // Get the current bounds of the map's visible region.
-                var float = mMap.getCameraPosition().zoom
+                val float = mMap.getCameraPosition().zoom
                 Log.d("Testi", "Kamera liikkuu")
                 Log.d("Kamera", float.toString())
-                if (float > 7.5) {
+                if (float > 11) {
 
+                    bounds = mMap.projection.visibleRegion.latLngBounds
 
-                    val bounds: LatLngBounds =
-                        mMap.getProjection().getVisibleRegion().latLngBounds
                     luearvot(bounds)
+
+
                 } else {
                     mMap.clear()
+                    addressList.clear()
+                    secondPostalcode = ""
+
                 }
-            })
+            }
 
         }
     }
 
+
     fun luearvot(bounds: LatLngBounds) {
+        val geocoder = Geocoder(this@MapsActivity)
+        val lon = mMap.cameraPosition.target.longitude
+        val lat = mMap.cameraPosition.target.latitude
+        val addresses = geocoder.getFromLocation(lat, lon, 1)
+
+
+        if (addresses != null && addresses.size > 0) {
+//            val address =
+//                addresses[0].getAddressLine(0)
+      //      val city = addresses[0].locality
+            val postalCode = addresses[0]?.postalCode
+            val totalAddress =
+                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20&resource_id=2ce47026-377f-4837-b26f-610626be0ac1"
+
+
+
+            if (!postalCode.equals(secondPostalcode)) {
+                getAllData(totalAddress)
+            }
+
+
+        }
+
+
+    }
+
+    fun getAllData(postalCode: String) {
         val markerBitmap =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
                 ?.toBitmap()
         val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-        for (i in 0 until 5) {
-            jsonresponsedata.get(i)
-                ?.let {
 
-                    var osoite = getLocationByAddress(this@MapsActivity, it.OSOITE)!!
+        val geocoder = Geocoder(this@MapsActivity)
 
-
-                    if (bounds.contains(osoite!!)) {
-                        // Add the marker.
-                        mMap!!.addMarker(MarkerOptions().position(
-                            osoite)
-                            .title(it.NIMI).icon(icon))
-
-                    } else {
-                        mMap.clear()
-                    }
-
-                }
+        with(Api) {
+            retrofitService.getAllData(postalCode).enqueue(object : Callback<ValDataone> {
+                override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
+                    if (response.isSuccessful) {
 
 
-        }
-}
+                        //  val adapter = moshi.adapter<List<Record>>()
+                        // val cards: List<Record> = adapter.fromJson(Datarecord)
 
-        fun getLocationByAddress(context: Context, strAddress: String?): LatLng? {
-            val coder = Geocoder(context)
-            try {
-                val address = coder.getFromLocationName(strAddress, 5) ?: return null
-                val location = address.first()
-                return LatLng(location.latitude, location.longitude)
-            } catch (e: Exception) {
+                        // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
 
-            }
-            return null
-        }
+                        //  val adapter = moshi.adapter<List<String>>(type)
+                        //  val moshi = Moshi.Builder()
+                        // .add(KotlinJsonAdapterFactory())
+                        // .build()
+                        //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
+
+                        jsonresponsedata = response.body()?.result?.records!!
+                        val koko = jsonresponsedata.size
+
+                        jsonresponsedata.forEach {
+
+                            try {
+                                val address = geocoder.getFromLocationName(it.OSOITE, 5)
+                                val location = address.first()
+                                elementData = LatLng(location.latitude, location.longitude)
+                            } catch (e: Exception) {
+                                Log.d("Virhe", "Ei toimi")
+                            }
 
 
-        fun getAllData() {
 
 
-            with(Api) {
-                retrofitService.getAllData().enqueue(object : Callback<ValDataone> {
-                    override fun onResponse(
-                        call: Call<ValDataone>,
-                        response: Response<ValDataone>
-                    ) {
 
-                        if (response.isSuccessful) {
-                            var Datarecord = response.body()?.result?.records
-                            val koko = Datarecord?.size
 
-                            jsonresponsedata = response.body()?.result!!.records
+                            if (bounds.contains(elementData!!)) {
 
-                            val moshi = Moshi.Builder()
-                                .add(KotlinJsonAdapterFactory())
-                                .build()
-                            val jsonAdapter = moshi.adapter(ValDataone::class.java)
 
-                            Log.i("Paljonko on haettu, JSON", koko.toString())
+                                if (!addressList.contains(elementData.toString())) {
+
+                                    Log.d("Ravintolan osoite mistä tehdään markeri", it.NIMI)
+//                                var markeri = MarkerOptions().position(
+//                                    arvo!!)
+//                                    .title(it.NIMI).snippet("Ravintolan id " +it._id.toString()).icon(icon)
+                                    mMap.addMarker(MarkerOptions().position(
+                                        elementData!!)
+                                        .title(it.NIMI)
+                                        .snippet("Ravintolan id " + it._id.toString()).icon(icon))
+                                    addressList.add(elementData.toString())
+
+                                }
+
+
+                            }
 
                         }
 
 
+
+
+                        secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
+                        Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
+                        Log.i("Paljonko on haettu, JSON", (koko - 1).toString())
                     }
 
-                    override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-                        t.printStackTrace()
-                        Log.i("virhe", "virhe");
-                    }
-                })
-            }
 
+                }
 
+                override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+                    t.printStackTrace()
+                    Log.i("virhe", "virhe")
+                }
+            })
         }
 
 
     }
+
+}
+
 
