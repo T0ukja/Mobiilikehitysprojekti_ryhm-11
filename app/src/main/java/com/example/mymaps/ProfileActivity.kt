@@ -1,20 +1,17 @@
 package com.example.mymaps
 
-import android.graphics.Color
-import android.graphics.ColorSpace
-import android.icu.number.IntegerWidth
 import android.os.Bundle
-import android.provider.CalendarContract
-import android.view.Gravity
+import android.text.Editable
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.Menu
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.GridLayout
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
-import java.lang.reflect.Array
+import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
+import kotlin.math.log
+
 
 class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,9 +19,54 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        var list = arrayOf("keijo", "ismo", "lauri")
-        updateGrid(list)
-        updateInfo(list.size.toString())
+        val showBtn: ImageView = findViewById(R.id.show)
+        val pwd: TextView = findViewById(R.id.password)
+        val changePwd: Button = findViewById(R.id.change_password)
+        val ok: Button = findViewById(R.id.ok)
+        var show: Boolean = false
+        showBtn.setOnClickListener {
+            if (show) {
+                pwd.transformationMethod = PasswordTransformationMethod.getInstance()
+                show = false
+            } else {
+                pwd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                show = true
+            }
+        }
+        changePwd.setOnClickListener {
+            this.findViewById<LinearLayout>(R.id.new_password).visibility = View.VISIBLE
+            this.findViewById<LinearLayout>(R.id.repeat_new_password).visibility = View.VISIBLE
+            ok.visibility = View.VISIBLE
+            changePwd.visibility = View.GONE
+        }
+        ok.setOnClickListener {
+            val newPswrd: String =
+                this.findViewById<EditText>(R.id.new_password_text).text.toString()
+            if (newPswrd == this.findViewById<EditText>(R.id.repeat_new_password_text).text.toString()) {
+                if (newPswrd == "") {
+                    Toast.makeText(
+                        applicationContext,
+                        "Salasana ei voi olla tyhjä",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    changePassword(newPswrd)
+                }
+            } else {
+                Toast.makeText(applicationContext, "Salasanat eivät täsmänneet", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    private fun changePassword(newPassword: String) {
+        this.findViewById<TextView>(R.id.password).text = newPassword
+        this.findViewById<LinearLayout>(R.id.new_password).visibility = View.GONE
+        this.findViewById<LinearLayout>(R.id.repeat_new_password).visibility = View.GONE
+        this.findViewById<Button>(R.id.ok).visibility = View.GONE
+        this.findViewById<Button>(R.id.change_password).visibility = View.VISIBLE
+        this.findViewById<EditText>(R.id.new_password_text).text.clear()
+        this.findViewById<EditText>(R.id.repeat_new_password_text).text.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,22 +81,4 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
-    // Päivitetään käyttäjän "kupongit"
-    private fun updateGrid(list: kotlin.Array<String>) {
-        for (i in list.indices) {
-            val button = Button(this)
-            button.setBackgroundColor(getColor(R.color.primary))
-            button.setText(list[i])
-            button.height = 200
-            button.width = 500
-            button.gravity = Gravity.CENTER
-            findViewById<GridLayout>(R.id.grid).addView(button)
-        }
-    }
-
-    // Päivitetään käyttäjän info
-    private fun updateInfo(quantity: String) {
-        val textView = findViewById<TextView>(R.id.coupon_quantity)
-        textView.text = quantity
-    }
 }

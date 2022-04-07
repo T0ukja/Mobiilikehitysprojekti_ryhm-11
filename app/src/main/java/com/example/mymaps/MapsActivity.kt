@@ -61,11 +61,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.top_bar_menu, menu)
-/*        if (loggedIn) {
-            menuInflater.inflate(R.menu.top_bar_menu_logged_in, menu)
-        } else {
-            menuInflater.inflate(R.menu.top_bar_menu_logged_off_main, menu)
-        }*/
         return true
     }
 
