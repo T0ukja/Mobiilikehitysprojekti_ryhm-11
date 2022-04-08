@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "123922819761",
+    "firebase_url": "https://kirjautuminen-819ed-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "kirjautuminen-819ed",
+    "storage_bucket": "kirjautuminen-819ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123922819761:android:744be10b133bd93e3d5090",
+        "android_client_info": {
+          "package_name": "com.example.mymaps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123922819761-kit588gvph5tpmfcklivbvg1n28hhvbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdbo7_dENtqCLNa5fKWJQoEtcAIpxiJaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123922819761-kit588gvph5tpmfcklivbvg1n28hhvbr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

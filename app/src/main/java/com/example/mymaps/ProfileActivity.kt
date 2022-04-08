@@ -1,16 +1,16 @@
 package com.example.mymaps
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.Menu
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
-import kotlin.math.log
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import java.util.*
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -57,6 +57,7 @@ class ProfileActivity : AppCompatActivity() {
                     .show()
             }
         }
+
     }
 
     private fun changePassword(newPassword: String) {
