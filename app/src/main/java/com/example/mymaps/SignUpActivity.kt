@@ -9,6 +9,7 @@ import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import android.view.Menu
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -17,6 +18,9 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val etUsernameSU = findViewById<EditText>(R.id.etUsernameSU)
         val etEmail = findViewById<EditText>(R.id.etEmail)
@@ -75,5 +79,16 @@ class SignUpActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.icLogin)?.setVisible(false)
+        menu?.findItem(R.id.profile)?.setVisible(false)
+        menu?.findItem(R.id.icLogOut)?.setVisible(false)
+        return super.onPrepareOptionsMenu(menu)
     }
 }

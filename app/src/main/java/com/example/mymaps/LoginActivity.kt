@@ -8,6 +8,8 @@ import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import android.view.Menu
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -16,6 +18,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
         val tvRegister = findViewById<TextView>(R.id.tvRegister)
         val ivHome = findViewById<ImageView>(R.id.ivHome)
         val btnSignIn = findViewById<Button>(R.id.btnSignIn)
@@ -72,6 +77,18 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.icLogin)?.setVisible(false)
+        menu?.findItem(R.id.profile)?.setVisible(false)
+        menu?.findItem(R.id.icLogOut)?.setVisible(false)
+        return super.onPrepareOptionsMenu(menu)
     }
 
 }
