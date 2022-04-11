@@ -1,37 +1,40 @@
 package com.example.mymaps
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
+import android.location.Address
 import android.location.Geocoder
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
+import androidx.appcompat.app.AppCompatActivity
 import com.example.getrestaurantdata.Record
 import com.example.getrestaurantdata.ValDataone
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.clustering.ClusterManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
+
     private lateinit var mMap: GoogleMap
     var jsonresponsedata: List<Record> = mutableListOf()
-    var elementData: LatLng? = null
     var secondPostalcode: String = ""
+    lateinit var postalCode: String
+    lateinit var city: String
+    lateinit var totalAddress: String
     var addressList: MutableList<String> = mutableListOf()
-
+lateinit var getlocation: Address
+    private lateinit var clusterManager: ClusterManager<getdata>
     lateinit var bounds: LatLngBounds
-//    fun GoogleMap.isMarkerVisible(markerPosition: LatLng) =
-//        projection.visibleRegion.latLngBounds.contains(markerPosition)
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +68,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onMapReady(googleMap: GoogleMap) {
 
-        mMap = googleMap
 
+        mMap = googleMap
+        clusterManager = ClusterManager(this@MapsActivity, mMap)
+        clusterManager.setAnimation(true)
 
         try {
             val success = googleMap.setMapStyle(
@@ -85,31 +91,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         if (mMap != null) {
             // Respond to camera movements.
+
             mMap.setOnCameraIdleListener {
+
+
+
                 // Get the current bounds of the map's visible region.
                 val float = mMap.getCameraPosition().zoom
-                Log.d("Testi", "Kamera liikkuu")
-                Log.d("Kamera", float.toString())
-                if (float > 11) {
+//                Log.d("Kamera", float.toString())
+                if (float > 13) {
 
                     bounds = mMap.projection.visibleRegion.latLngBounds
 
-                    luearvot(bounds)
+                        luearvot()
+                    clusterManager.cluster()
 
 
-                } else {
-                    mMap.clear()
+
+
+                }
+                    else {
+                    clusterManager.clearItems()
+                    clusterManager.cluster()
                     addressList.clear()
                     secondPostalcode = ""
 
                 }
             }
 
-        }
+
+    }
     }
 
 
-    fun luearvot(bounds: LatLngBounds) {
+
+     private fun luearvot() {
         val geocoder = Geocoder(this@MapsActivity)
         val lon = mMap.cameraPosition.target.longitude
         val lat = mMap.cameraPosition.target.latitude
@@ -117,111 +133,104 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         if (addresses != null && addresses.size > 0) {
-//            val address =
-//                addresses[0].getAddressLine(0)
-      //      val city = addresses[0].locality
-            val postalCode = addresses[0]?.postalCode
-            val totalAddress =
-                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20&resource_id=2ce47026-377f-4837-b26f-610626be0ac1"
+
+            city = addresses[0].locality
+
+             postalCode = addresses[0]?.postalCode!!
+
+            totalAddress =
+                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20${city}%20&resource_id=2ce47026-377f-4837-b26f-610626be0ac1"
 
 
 
-            if (!postalCode.equals(secondPostalcode)) {
-                getAllData(totalAddress)
+            if (!postalCode.equals(secondPostalcode) && postalCode != null) {
+clusterManager.clearItems()
+
+ getAllData()
+
             }
 
 
         }
 
 
+
     }
 
-    fun getAllData(postalCode: String) {
-        val markerBitmap =
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
-                ?.toBitmap()
-        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+     fun getAllData() {
 
-        val geocoder = Geocoder(this@MapsActivity)
+//        var markerBitmap =
+//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+//                ?.toBitmap()
+//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+       //  val listener = GeocodeListener(this@MapsActivity)
+    val geocoder = Geocoder(this@MapsActivity)
 
-        with(Api) {
-            retrofitService.getAllData(postalCode).enqueue(object : Callback<ValDataone> {
-                override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
-                    if (response.isSuccessful) {
+    with(Api) {
+        retrofitService.getAllData(totalAddress).enqueue(object : Callback<ValDataone> {
+        //    @RequiresApi(33)
+            override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
+                if (response.isSuccessful) {
 
 
-                        //  val adapter = moshi.adapter<List<Record>>()
-                        // val cards: List<Record> = adapter.fromJson(Datarecord)
+                    //  val adapter = moshi.adapter<List<Record>>()
+                    // val cards: List<Record> = adapter.fromJson(Datarecord)
 
-                        // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
+                    // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
 
-                        //  val adapter = moshi.adapter<List<String>>(type)
-                        //  val moshi = Moshi.Builder()
-                        // .add(KotlinJsonAdapterFactory())
-                        // .build()
-                        //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
+                    //  val adapter = moshi.adapter<List<String>>(type)
+                    //  val moshi = Moshi.Builder()
+                    // .add(KotlinJsonAdapterFactory())
+                    // .build()
+                    //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
 
-                        jsonresponsedata = response.body()?.result?.records!!
-                        val koko = jsonresponsedata.size
-
-                        jsonresponsedata.forEach {
-
-                            try {
-                                val address = geocoder.getFromLocationName(it.OSOITE, 5)
-                                val location = address.first()
-                                elementData = LatLng(location.latitude, location.longitude)
-                            } catch (e: Exception) {
-                                Log.d("Virhe", "Ei toimi")
-                            }
+                    jsonresponsedata = response.body()?.result?.records!!
+                    jsonresponsedata.stream().forEach() {
 
 
 
 
+                        try {
 
 
-                            if (bounds.contains(elementData!!)) {
+                                var location = geocoder.getFromLocationName(it.OSOITE,1
+                                )
+                            getlocation = location.first()
 
-
-                                if (!addressList.contains(elementData.toString())) {
-
-                                    Log.d("Ravintolan osoite mistä tehdään markeri", it.NIMI)
-//                                var markeri = MarkerOptions().position(
-//                                    arvo!!)
-//                                    .title(it.NIMI).snippet("Ravintolan id " +it._id.toString()).icon(icon)
-                                    mMap.addMarker(MarkerOptions().position(
-                                        elementData!!)
-                                        .title(it.NIMI)
-                                        .snippet("Ravintolan id " + it._id.toString()).icon(icon))
-                                    addressList.add(elementData.toString())
-
-                                }
-
-
-                            }
-
+                        } catch (e: Exception) {
+                         //   Log.d("Virhe", "Ei toimi")
                         }
 
+                        val dataitem = getdata(getlocation.latitude,getlocation.longitude, it.NIMI, it.OSOITE)
+                        clusterManager.addItem(dataitem)
 
 
 
-                        secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
-                        Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
-                        Log.i("Paljonko on haettu, JSON", (koko - 1).toString())
                     }
 
+                    clusterManager.cluster()
 
                 }
+                if(jsonresponsedata.elementAt(0)!=null)
+                    secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
+                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
 
-                override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-                    t.printStackTrace()
-                    Log.i("virhe", "virhe")
-                }
-            })
-        }
+            }
 
-
-    }
+            override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("virhe", "virhe")
+            }
+        })
 
 }
 
+    }
 
+    override fun invoke(p1: MutableList<Address>) {
+    }
+}
+
+inline fun dataitem(crossinline f: () -> Unit) {
+    Thread({ f() }).start()
+}
