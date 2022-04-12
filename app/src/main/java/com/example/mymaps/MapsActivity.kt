@@ -1,5 +1,6 @@
 package com.example.mymaps
 
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
@@ -18,6 +19,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.clustering.ClusterManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Addre
     var jsonresponsedata: List<Record> = mutableListOf()
     var secondPostalcode: String = ""
     lateinit var postalCode: String
-    lateinit var city: String
+ //   lateinit var city: String
     lateinit var totalAddress: String
     var addressList: MutableList<String> = mutableListOf()
 lateinit var getlocation: Address
@@ -103,8 +109,11 @@ lateinit var getlocation: Address
 
                     bounds = mMap.projection.visibleRegion.latLngBounds
 
-                        luearvot()
-                    clusterManager.cluster()
+                    GlobalScope.launch (Dispatchers.Main) {  luearvot() }
+if(float > 13.1){
+    clusterManager.cluster()
+
+}
 
 
 
@@ -125,7 +134,7 @@ lateinit var getlocation: Address
 
 
 
-     private fun luearvot() {
+     private suspend fun luearvot() {
         val geocoder = Geocoder(this@MapsActivity)
         val lon = mMap.cameraPosition.target.longitude
         val lat = mMap.cameraPosition.target.latitude
@@ -134,12 +143,13 @@ lateinit var getlocation: Address
 
         if (addresses != null && addresses.size > 0) {
 
-            city = addresses[0].locality
+          //  city = addresses[0].locality
 
              postalCode = addresses[0]?.postalCode!!
-
+if(postalCode == null)
+    postalCode == secondPostalcode
             totalAddress =
-                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20${city}%20&resource_id=2ce47026-377f-4837-b26f-610626be0ac1"
+                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20&resource_id=2ce47026-377f-4837-b26f-610626be0ac1"
 
 
 
@@ -157,8 +167,9 @@ clusterManager.clearItems()
 
     }
 
-     fun getAllData() {
-
+     suspend fun getAllData() = coroutineScope {
+         GlobalScope.launch (Dispatchers.IO) {
+             doAsync {
 //        var markerBitmap =
 //            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
 //                ?.toBitmap()
@@ -172,7 +183,6 @@ clusterManager.clearItems()
             override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
                 if (response.isSuccessful) {
 
-
                     //  val adapter = moshi.adapter<List<Record>>()
                     // val cards: List<Record> = adapter.fromJson(Datarecord)
 
@@ -184,6 +194,7 @@ clusterManager.clearItems()
                     // .build()
                     //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
 
+
                     jsonresponsedata = response.body()?.result?.records!!
                     jsonresponsedata.stream().forEach() {
 
@@ -193,7 +204,7 @@ clusterManager.clearItems()
                         try {
 
 
-                                var location = geocoder.getFromLocationName(it.OSOITE,1
+                                val location = geocoder.getFromLocationName(it.OSOITE,1
                                 )
                             getlocation = location.first()
 
@@ -208,12 +219,12 @@ clusterManager.clearItems()
 
                     }
 
-                    clusterManager.cluster()
+                  clusterManager.cluster()
 
                 }
-                if(jsonresponsedata.elementAt(0)!=null)
+                if(jsonresponsedata.size != 0)
                     secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
-                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
+//                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
 
             }
 
@@ -225,12 +236,18 @@ clusterManager.clearItems()
 
 }
 
-    }
+
+     }
+//    override fun invoke(p1: MutableList<Address>) {
+//    }
+         }
+     }
 
     override fun invoke(p1: MutableList<Address>) {
+
     }
 }
 
-inline fun dataitem(crossinline f: () -> Unit) {
-    Thread({ f() }).start()
-}
+//inline fun dataitem(crossinline f: () -> Unit) {
+//    Thread({ f() }).start()
+//}

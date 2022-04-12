@@ -4,16 +4,15 @@ plugins {
 }
 
 android {
-  compileSdk 32
+ //   compileSdk 32
     compileSdkPreview = "Tiramisu"
 
 
     defaultConfig {
         applicationId "com.example.mymaps"
-        minSdk 29
-      //  minSdk 32
-      targetSdk 32
-        //targetSdkPreview = "Tiramisu"
+        minSdk 32
+   //     targetSdk 32
+        targetSdkPreview = "Tiramisu"
 
         versionName '32'
 
@@ -52,7 +51,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-alpha02"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
-
+implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
