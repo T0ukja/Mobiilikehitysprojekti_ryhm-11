@@ -16,14 +16,15 @@ import com.example.getrestaurantdata.ValDataone
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,7 +36,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Addre
     var jsonresponsedata: List<Record> = mutableListOf()
     var secondPostalcode: String = ""
     lateinit var postalCode: String
- //   lateinit var city: String
+   lateinit var city: String
     lateinit var totalAddress: String
     var addressList: MutableList<String> = mutableListOf()
 lateinit var getlocation: Address
@@ -106,10 +107,21 @@ lateinit var getlocation: Address
                 val float = mMap.getCameraPosition().zoom
 //                Log.d("Kamera", float.toString())
                 if (float > 13) {
+//val testi = dataitem { luearvot() }
+//                    val thread = SimpleThread(luearvot())
+//thread.start()
+//luearvot()
+
+
+                    GlobalScope.launch (Dispatchers.Main) {
+                        luearvot()
+
+                    }
+
 
                     bounds = mMap.projection.visibleRegion.latLngBounds
 
-                    GlobalScope.launch (Dispatchers.Main) {  luearvot() }
+
 if(float > 13.1){
     clusterManager.cluster()
 
@@ -134,7 +146,12 @@ if(float > 13.1){
 
 
 
-     private suspend fun luearvot() {
+     private fun luearvot() {
+//        var markerBitmap =
+//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+//                ?.toBitmap()
+//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+     //    val arvoja = moro()
         val geocoder = Geocoder(this@MapsActivity)
         val lon = mMap.cameraPosition.target.longitude
         val lat = mMap.cameraPosition.target.latitude
@@ -142,24 +159,97 @@ if(float > 13.1){
 
 
         if (addresses != null && addresses.size > 0) {
-
-          //  city = addresses[0].locality
+            city = addresses[0].locality
 
              postalCode = addresses[0]?.postalCode!!
-if(postalCode == null)
-    postalCode == secondPostalcode
+if(postalCode == null){ postalCode == secondPostalcode}
+
+
+            Log.d("Postinumero", postalCode)
             totalAddress =
-                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20&resource_id=2ce47026-377f-4837-b26f-610626be0ac1"
+                "data/fi/api/3/action/datastore_search?q=anniskelu%20a%20${postalCode}%20${city}&resource_id=2ce47026-377f-4837-b26f-610626be0ac1&limit=300"
 
 
 
             if (!postalCode.equals(secondPostalcode) && postalCode != null) {
-clusterManager.clearItems()
+               // Thread(Runnable{
 
- getAllData()
 
+              //  withContext(Dispatchers.IO) {
+                    clusterManager.clearItems()
+                    with(Api) {
+                        retrofitService.getAllData(totalAddress)
+                            .enqueue(object : Callback<ValDataone> {
+                                //    @RequiresApi(33)
+                                override fun onResponse(
+                                    call: Call<ValDataone>,
+                                    response: Response<ValDataone>
+                                ) {
+                                    if (response.isSuccessful) {
+
+                                        //  val adapter = moshi.adapter<List<Record>>()
+                                        // val cards: List<Record> = adapter.fromJson(Datarecord)
+
+                                        // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
+
+                                        //  val adapter = moshi.adapter<List<String>>(type)
+                                        //  val moshi = Moshi.Builder()
+                                        // .add(KotlinJsonAdapterFactory())
+                                        // .build()
+                                        //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
+
+
+                                        jsonresponsedata = response.body()?.result?.records!!
+                                        jsonresponsedata.stream().forEach() {
+
+
+                                            try {
+
+
+                                                val location = geocoder.getFromLocationName(
+                                                    it.OSOITE, 1
+                                                )
+                                                getlocation = location.first()
+
+                                            } catch (e: Exception) {
+                                                //   Log.d("Virhe", "Ei toimi")
+                                            }
+
+                                            val dataitem = getdata(
+                                                getlocation.latitude,
+                                                getlocation.longitude,
+                                                it.NIMI,
+                                                it.OSOITE,
+                                                R.drawable.ic_baseline_local_bar_24
+                                            )
+
+                                            clusterManager.addItem(dataitem)
+
+
+                                        }
+
+                                        clusterManager.cluster()
+
+                                    }
+                                    if (jsonresponsedata.size != 0)
+                                        secondPostalcode =
+                                            jsonresponsedata.elementAt(0).POSTINUMERO.toString()
+//                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
+
+                                }
+
+                                override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+                                    t.printStackTrace()
+                                    Log.i("virhe", "virhe")
+                                }
+                            })
+
+          //          }
+
+//arvoja.viewModelScope.coroutineContext
+                }
+             //   }).start()
             }
-
 
         }
 
@@ -167,87 +257,107 @@ clusterManager.clearItems()
 
     }
 
-     suspend fun getAllData() = coroutineScope {
-         GlobalScope.launch (Dispatchers.IO) {
-             doAsync {
-//        var markerBitmap =
-//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
-//                ?.toBitmap()
-//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-       //  val listener = GeocodeListener(this@MapsActivity)
-    val geocoder = Geocoder(this@MapsActivity)
-
-    with(Api) {
-        retrofitService.getAllData(totalAddress).enqueue(object : Callback<ValDataone> {
-        //    @RequiresApi(33)
-            override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
-                if (response.isSuccessful) {
-
-                    //  val adapter = moshi.adapter<List<Record>>()
-                    // val cards: List<Record> = adapter.fromJson(Datarecord)
-
-                    // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
-
-                    //  val adapter = moshi.adapter<List<String>>(type)
-                    //  val moshi = Moshi.Builder()
-                    // .add(KotlinJsonAdapterFactory())
-                    // .build()
-                    //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
-
-
-                    jsonresponsedata = response.body()?.result?.records!!
-                    jsonresponsedata.stream().forEach() {
-
-
-
-
-                        try {
-
-
-                                val location = geocoder.getFromLocationName(it.OSOITE,1
-                                )
-                            getlocation = location.first()
-
-                        } catch (e: Exception) {
-                         //   Log.d("Virhe", "Ei toimi")
-                        }
-
-                        val dataitem = getdata(getlocation.latitude,getlocation.longitude, it.NIMI, it.OSOITE)
-                        clusterManager.addItem(dataitem)
-
-
-
-                    }
-
-                  clusterManager.cluster()
-
-                }
-                if(jsonresponsedata.size != 0)
-                    secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
-//                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
-
-            }
-
-            override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-                t.printStackTrace()
-                Log.i("virhe", "virhe")
-            }
-        })
-
-}
-
-
-     }
-//    override fun invoke(p1: MutableList<Address>) {
-//    }
-         }
-     }
+    protected fun onBeforeClusterRendered(
+        cluster: Cluster<getdata?>?,
+        markerOptions: MarkerOptions
+    ) {
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_local_bar_24))
+    }
+//     suspend fun getAllData() = coroutineScope {
+//         GlobalScope.launch (Dispatchers.IO) {
+//             doAsync {
+////        var markerBitmap =
+////            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+////                ?.toBitmap()
+////        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+//       //  val listener = GeocodeListener(this@MapsActivity)
+//    val geocoder = Geocoder(this@MapsActivity)
+//
+//    with(Api) {
+//        retrofitService.getAllData(totalAddress).enqueue(object : Callback<ValDataone> {
+//        //    @RequiresApi(33)
+//            override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
+//                if (response.isSuccessful) {
+//
+//                    //  val adapter = moshi.adapter<List<Record>>()
+//                    // val cards: List<Record> = adapter.fromJson(Datarecord)
+//
+//                    // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
+//
+//                    //  val adapter = moshi.adapter<List<String>>(type)
+//                    //  val moshi = Moshi.Builder()
+//                    // .add(KotlinJsonAdapterFactory())
+//                    // .build()
+//                    //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
+//
+//
+//                    jsonresponsedata = response.body()?.result?.records!!
+//                    jsonresponsedata.stream().forEach() {
+//
+//
+//
+//
+//                        try {
+//
+//
+//                                val location = geocoder.getFromLocationName(it.OSOITE,1
+//                                )
+//                            getlocation = location.first()
+//
+//                        } catch (e: Exception) {
+//                         //   Log.d("Virhe", "Ei toimi")
+//                        }
+//
+//                        val dataitem = getdata(getlocation.latitude,getlocation.longitude, it.NIMI, it.OSOITE, R.drawable.ic_baseline_local_bar_24)
+//                        clusterManager.addItem(dataitem)
+//
+//
+//
+//                    }
+//
+//                  clusterManager.cluster()
+//
+//                }
+//                if(jsonresponsedata.size != 0)
+//                    secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
+////                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
+//
+//            }
+//
+//            override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+//                t.printStackTrace()
+//                Log.i("virhe", "virhe")
+//            }
+//        })
+//
+//}
+//
+//
+//     }
+////    override fun invoke(p1: MutableList<Address>) {
+////    }
+//         }
+//     }
 
     override fun invoke(p1: MutableList<Address>) {
 
     }
+
+//    inner class moro: ViewModel(){
+//        init {
+//            viewModelScope.launch {
+//                getAllData()
+//            }
+//        }
+//    }
 }
 
-//inline fun dataitem(crossinline f: () -> Unit) {
-//    Thread({ f() }).start()
-//}
+inline fun dataitem(crossinline f: () -> Unit) {
+    Thread({ f() }).start()
+}
+class SimpleThread(allData: Unit) : Thread() {
+    //val mapsi = MapsActivity()
+    public override fun run() {
+    Unit
+    }
+}
