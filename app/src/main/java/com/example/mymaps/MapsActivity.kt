@@ -37,7 +37,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
     lateinit var toggle: ActionBarDrawerToggle
-    var loggedIn = true
+    var loggedIn = false
 
     companion object {
         private const val LOCATION_REQUEST_CODE = 1
@@ -62,7 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapFragment!!.getMapAsync(this)
         auth = Firebase.auth
         onStartUp()
-
+        loggedIn = onStartUp()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient((this))
 
     }
@@ -73,12 +73,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.icLogOut)?.setVisible(false)
+        if (intent.hasExtra("loggedIn")) {
+            loggedIn = intent.extras?.get("loggedIn") as Boolean
+        }
         if (loggedIn) {
             menu?.findItem(R.id.icLogin)?.setVisible(false)
 
         } else {
             menu?.findItem(R.id.profile)?.setVisible(false)
-            menu?.findItem(R.id.icLogOut)?.setVisible(false)
         }
         return true
     }
@@ -95,7 +98,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 return true
             }
             R.id.icLogin -> {
-                finish()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 return true
@@ -169,15 +171,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.addMarker((markerOptions))
     }
 
-    private fun onStartUp() {
+    private fun onStartUp(): Boolean {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         val siEmail = currentUser?.email
-        Toast.makeText(this, "Sisäänkirjauduttu spostilla " + siEmail.toString(), Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Sisäänkirjauduttu spostilla " + siEmail.toString(), Toast.LENGTH_SHORT).show()
         if(currentUser != null){
             reload()
-        }
+            return true
+        }else return false
     }
 
     private fun reload() {

@@ -28,24 +28,23 @@ class SignUpActivity : AppCompatActivity() {
         val etCPasswordSU = findViewById<EditText>(R.id.etCPasswordSU)
         val btnSignUp = findViewById<Button>(R.id.btnSignUp)
         val tvSignIn = findViewById<TextView>(R.id.tvSignIn)
-        val ivHomeSU = findViewById<ImageView>(R.id.ivHomeSU)
+
 
         auth = Firebase.auth
 
         btnSignUp.setOnClickListener() {
             if (etUsernameSU.text.trim().isNotEmpty() && etPasswordSU.text.isNotEmpty() &&
-                etEmail.text.trim().isNotEmpty() && etCPasswordSU.text.isNotEmpty()) {
+                etEmail.text.trim().isNotEmpty() && etCPasswordSU.text.isNotEmpty()
+            ) {
                 if (etPasswordSU.text.toString() == etCPasswordSU.text.toString()) {
                     val email = etEmail.text.toString().trim()
                     val password = etPasswordSU.text.toString().trim()
-                    createUser(email,password)
+                    createUser(email, password)
                     Toast.makeText(this, "Luodaan profiili...", Toast.LENGTH_LONG).show()
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Salasanat eivät täsmää", Toast.LENGTH_LONG).show()
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(this, "Täytä kaikki kohdat", Toast.LENGTH_LONG).show()
             }
         }
@@ -57,9 +56,7 @@ class SignUpActivity : AppCompatActivity() {
             finish()
         }
 
-        ivHomeSU.setOnClickListener() {
-            finish()
-        }
+
     }
 
     private fun createUser(email: String, password: String) {
@@ -80,6 +77,7 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_bar_menu, menu)
         return super.onCreateOptionsMenu(menu)
