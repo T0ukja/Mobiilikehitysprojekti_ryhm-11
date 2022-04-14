@@ -21,10 +21,12 @@ class CommentActivity : AppCompatActivity() {
     }
 
     private fun setUpTabs() {
-
         val adapter = ViewPagerAdapter(supportFragmentManager)
 
         val markerdata = intent.getStringExtra("Ravintola")
+
+
+
       //  binding.moro.setText(moro)
         adapter.addFragment(BarFrag1(), markerdata.toString())
         adapter.addFragment(BarFrag2(), "Tapahtumat")

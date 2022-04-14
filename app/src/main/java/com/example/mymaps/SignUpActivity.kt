@@ -1,16 +1,16 @@
 package com.example.mymaps
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.*
+import android.view.Menu
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import android.view.Menu
-import android.widget.TextView
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
@@ -78,10 +78,7 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_bar_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.icLogin)?.setVisible(false)
@@ -97,8 +94,6 @@ class SignUpActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        //adds items to the action bar
         menuInflater.inflate(R.menu.top_bar_menu, menu)
-        return true}
-    }
-}
+        return true
+    }}

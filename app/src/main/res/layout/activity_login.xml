@@ -24,7 +24,6 @@
 
     <EditText
         android:id="@+id/etEmail"
-        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -32,8 +31,6 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         android:hint="Email"
-        android:hint="Username"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,13 +48,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/etEmail"
         app:layout_constraintStart_toStartOf="@+id/etEmail"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
-        
-      />
-
-
-        
     <CheckBox
         android:id="@+id/cbShowPW"
         android:layout_width="wrap_content"

@@ -1,23 +1,35 @@
 package com.example.mymaps
 
 
+//import androidx.appcompat.app.AppCompatActivity
+//import com.google.android.gms.maps.GoogleMap
+//import com.google.android.gms.maps.OnMapReadyCallback
+//import com.google.android.gms.maps.SupportMapFragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.getrestaurantdata.Record
 import com.example.getrestaurantdata.ValDataone
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlinx.coroutines.Dispatchers
@@ -26,28 +38,12 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.google.android.gms.maps.model.*
 
 
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
-    private lateinit var mMap: GoogleMap
+  //  private lateinit var mMap: GoogleMap
     private lateinit var auth: FirebaseAuth
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
@@ -113,6 +109,24 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         return true
     }
 
+    private fun reload() {
+
+    }
+
+
+
+    private fun onStartUp(): Boolean {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        val siEmail = currentUser?.email
+        Toast.makeText(this, "Sisäänkirjauduttu spostilla " + siEmail.toString(), Toast.LENGTH_SHORT).show()
+        if(currentUser != null){
+            reload()
+            return true
+        }else return false
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
@@ -124,9 +138,6 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
                 startActivity(intent)
                 return true
             }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
             R.id.icLogin -> {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
@@ -366,6 +377,7 @@ clusterManager.cluster()
                                 }
                             })
 
+
           //          }
 
 //arvoja.viewModelScope.coroutineContext
@@ -430,23 +442,9 @@ Firebasesta
 
 
  */
-    private fun onStartUp(): Boolean {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        val siEmail = currentUser?.email
-        Toast.makeText(this, "Sisäänkirjauduttu spostilla " + siEmail.toString(), Toast.LENGTH_SHORT).show()
-        if(currentUser != null){
-            reload()
-            return true
-        }else return false
-    }
 
-    private fun reload() {
-
-    }
-    override fun onMarkerClick(p0: Marker) = false
-} 
+//    override fun onMarkerClick(p0: Marker) = false{
+//}
 
 
 
@@ -527,6 +525,15 @@ Firebasesta
 //
 //
 //     }
+
+//    override fun invoke(p1: MutableList<Address>) {
+//
+//    }
+
+
+
+
+
 
     override fun invoke(p1: MutableList<Address>) {
 
