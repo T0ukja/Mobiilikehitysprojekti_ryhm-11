@@ -1,7 +1,6 @@
 package com.example.mymaps
 
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
@@ -11,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.getrestaurantdata.Record
 import com.example.getrestaurantdata.ValDataone
@@ -28,6 +26,9 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
@@ -123,9 +124,7 @@ lateinit var getlocation: Address
             Log.d("Moro, info ikkunasta", info.toString())
             val intent = Intent(this, CommentActivity::class.java)
 intent.putExtra("Ravintola", info)
-
                 startActivity(intent)
-            //clusterManager.onInfoWindowClick(clusterRender.getMarker(getdata))
             true
         }
 

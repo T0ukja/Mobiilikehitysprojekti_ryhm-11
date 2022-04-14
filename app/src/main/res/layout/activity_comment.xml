@@ -6,23 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".CommentActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Moro"
-        app:layout_constraintEnd_toEndOf="@+id/bartablayout"
-        app:layout_constraintStart_toStartOf="@+id/bartablayout"
-        tools:ignore="MissingConstraints" />
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/bartablayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
+        app:tabBackground="@color/cardview_dark_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:tabBackground="@color/cardview_dark_background" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
        <!-- <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
