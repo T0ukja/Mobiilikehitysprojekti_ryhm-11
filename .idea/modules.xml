@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Mymaps.iml" filepath="$PROJECT_DIR$/.idea/modules/Mymaps.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mymaps.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mymaps.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mymaps.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mymaps.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mymaps.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mymaps.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mymaps.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mymaps.app.unitTest.iml" />
     </modules>
   </component>
 </project>

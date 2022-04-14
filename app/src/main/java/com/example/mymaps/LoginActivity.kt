@@ -6,6 +6,8 @@ import android.text.InputType
 import android.view.Menu
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -83,8 +85,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+       // menuInflater.inflate(R.menu.top_bar_menu, menu)
+       // return super.onCreateOptionsMenu(menu)
+
+        //adds items to the action bar
         menuInflater.inflate(R.menu.top_bar_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {

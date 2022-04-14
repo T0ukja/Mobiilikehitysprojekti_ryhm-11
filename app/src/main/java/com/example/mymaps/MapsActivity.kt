@@ -43,6 +43,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.android.gms.maps.model.*
 
+
+
+
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
     private lateinit var mMap: GoogleMap
     private lateinit var auth: FirebaseAuth
@@ -180,8 +183,9 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
  val info = clusterRender.getMarker(getdata).title
             Log.d("Moro, info ikkunasta", info.toString())
-
-            //clusterManager.onInfoWindowClick(clusterRender.getMarker(getdata))
+            val intent = Intent(this, CommentActivity::class.java)
+intent.putExtra("Ravintola", info)
+                startActivity(intent)
             true
         }
 

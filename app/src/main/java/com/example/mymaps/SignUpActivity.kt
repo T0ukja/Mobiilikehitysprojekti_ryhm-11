@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import android.view.Menu
-
+import android.widget.TextView
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
@@ -88,5 +88,17 @@ class SignUpActivity : AppCompatActivity() {
         menu?.findItem(R.id.profile)?.setVisible(false)
         menu?.findItem(R.id.icLogOut)?.setVisible(false)
         return super.onPrepareOptionsMenu(menu)
+              val tvSignIn = findViewById<TextView>(R.id.tvSignIn)
+
+        tvSignIn.setOnClickListener() {
+            finish()
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //adds items to the action bar
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        return true}
     }
 }
