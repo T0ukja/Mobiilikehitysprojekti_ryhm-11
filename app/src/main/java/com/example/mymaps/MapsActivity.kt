@@ -26,10 +26,34 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.android.gms.maps.model.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
+    private lateinit var mMap: GoogleMap
+    private lateinit var auth: FirebaseAuth
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var lastLocation: Location
+    lateinit var toggle: ActionBarDrawerToggle
+        var loggedIn = false
 
+    companion object {
+        private const val LOCATION_REQUEST_CODE = 1
+    }
     private lateinit var mMap: GoogleMap
     var jsonresponsedata: List<Record> = mutableListOf()
     var secondPostalcode: String = ""
@@ -47,19 +71,56 @@ lateinit var getlocation: Address
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         setSupportActionBar(findViewById(R.id.toolbar))
+        toggle = ActionBarDrawerToggle(
+            this,
+            findViewById(R.id.drawer_layout),
+            R.string.open,
+            R.string.close
+        )
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toggle.syncState()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
-
+        auth = Firebase.auth
+        onStartUp()
+        loggedIn = onStartUp()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient((this))
 
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        //adds items to the action bar
         menuInflater.inflate(R.menu.top_bar_menu, menu)
         return true
     }
+
+   
+override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.icLogOut)?.setVisible(false)
+        if (intent.hasExtra("loggedIn")) {
+            loggedIn = intent.extras?.get("loggedIn") as Boolean
+        }
+        if (loggedIn) {
+            menu?.findItem(R.id.icLogin)?.setVisible(false)
+
+        } else {
+            menu?.findItem(R.id.profile)?.setVisible(false)
+        }
+        return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return when (item.itemId) {
+            R.id.profile -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+                return true
+            }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -306,6 +367,45 @@ clusterManager.cluster()
 //arvoja.viewModelScope.coroutineContext
                 }
              //   }).start()
+
+
+/*
+
+Firebase branchista
+
+
+ setupMap()
+
+
+    }
+
+    private fun setupMap() {
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(
+                this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_REQUEST_CODE
+            )
+            return
+        }
+        mMap.isMyLocationEnabled = true
+        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+
+            if (location != null) {
+                lastLocation = location
+                val currentLatLong = LatLng(location.latitude, location.longitude)
+                //placeMarkerOnMap(currentLatLong)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 12f))
+
+
+ */
+
+
             }
 
         }
@@ -314,7 +414,39 @@ clusterManager.cluster()
 
     }
 
-//    protected fun onBeforeClusterRendered(
+/*
+Firebasesta 
+
+    private fun placeMarkerOnMap(currentLatLng: LatLng) {
+        val markerOptions = MarkerOptions().position(currentLatLng)
+        markerOptions.title("$currentLatLng")
+        mMap.addMarker((markerOptions))
+    }
+
+
+
+ */
+    private fun onStartUp(): Boolean {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        val siEmail = currentUser?.email
+        Toast.makeText(this, "Sisäänkirjauduttu spostilla " + siEmail.toString(), Toast.LENGTH_SHORT).show()
+        if(currentUser != null){
+            reload()
+            return true
+        }else return false
+    }
+
+    private fun reload() {
+
+    }
+    override fun onMarkerClick(p0: Marker) = false
+} 
+
+
+
+//   protected fun onBeforeClusterRendered(
 //        cluster: Cluster<getdata?>?,
 //        markerOptions: MarkerOptions
 //    ) {
