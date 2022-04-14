@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
- //   compileSdk 32
-    compileSdkPreview = "Tiramisu"
+   compileSdk 32
+    //compileSdkPreview = "Tiramisu"
 
 
     defaultConfig {
         applicationId "com.example.mymaps"
-        minSdk 32
-   //     targetSdk 32
-        targetSdkPreview = "Tiramisu"
+        minSdk 27
+     targetSdk 32
+      //  targetSdkPreview = "Tiramisu"
 
         versionName '32'
 
