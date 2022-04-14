@@ -16,12 +16,10 @@ import com.example.getrestaurantdata.ValDataone
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -77,11 +75,54 @@ lateinit var getlocation: Address
 
     @SuppressLint("SuspiciousIndentation")
     override fun onMapReady(googleMap: GoogleMap) {
-
+//clusterManager.setOnClusterClickListener(mOnClusterClickListener)
 
         mMap = googleMap
-        clusterManager = ClusterManager(this@MapsActivity, mMap)
+
+        clusterManager = ClusterManager<getdata>(this@MapsActivity, mMap)
+//        val mRenderer = CustomClusterRenderer(this, mMap, clusterManager)
+//        mRende
+       // clusterManager.setRenderer(mRenderer)
+
         clusterManager.setAnimation(true)
+     //   map.setOnMarkerClickListener(mClusterManager);
+
+
+//        clusterManager.setOnClusterItemClickListener { getdata ->
+//
+//
+//            val clusterRender = clusterManager.renderer as DefaultClusterRenderer
+//
+//
+//         val moro = clusterRender.getMarker(getdata).title
+//
+//
+//            clusterRender.getMarker(getdata).showInfoWindow()
+//        Log.d("Moro, titteli", moro.toString())
+//
+//
+//
+//
+//
+////
+////            beachMarker.isSelected = true
+////            val marker = clusterRender.getMarker(beachMarker)
+////            clusterRender.onClusterItemChange(beachMarker, marker)
+////            lastSelectedBeachMarker = beachMarker
+//            true
+//        }
+        clusterManager.setOnClusterItemInfoWindowClickListener() { getdata ->
+
+
+            val clusterRender = clusterManager.renderer as DefaultClusterRenderer
+
+
+ val info = clusterRender.getMarker(getdata).title
+            Log.d("Moro, info ikkunasta", info.toString())
+
+            //clusterManager.onInfoWindowClick(clusterRender.getMarker(getdata))
+            true
+        }
 
         try {
             val success = googleMap.setMapStyle(
@@ -107,11 +148,6 @@ lateinit var getlocation: Address
                 val float = mMap.getCameraPosition().zoom
 //                Log.d("Kamera", float.toString())
                 if (float > 13) {
-//val testi = dataitem { luearvot() }
-//                    val thread = SimpleThread(luearvot())
-//thread.start()
-//luearvot()
-
 
                     GlobalScope.launch (Dispatchers.Main) {
                         luearvot()
@@ -138,15 +174,28 @@ if(float > 13.1){
                     secondPostalcode = ""
 
                 }
+
+
+
+
+
+
             }
 
 
     }
+
+
     }
 
 
 
-     private fun luearvot() {
+
+
+
+
+
+    private fun luearvot() {
 //        var markerBitmap =
 //            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
 //                ?.toBitmap()
@@ -177,6 +226,7 @@ if(postalCode == null){ postalCode == secondPostalcode}
 
               //  withContext(Dispatchers.IO) {
                     clusterManager.clearItems()
+
                     with(Api) {
                         retrofitService.getAllData(totalAddress)
                             .enqueue(object : Callback<ValDataone> {
@@ -223,18 +273,25 @@ if(postalCode == null){ postalCode == secondPostalcode}
                                                 R.drawable.ic_baseline_local_bar_24
                                             )
 
+
                                             clusterManager.addItem(dataitem)
 
 
                                         }
+//                                        render = CustomClusterRenderer(this@MapsActivity, mMap, clusterManager)
+//                                        clusterManager.setRenderer(render)
+clusterManager.cluster()
 
-                                        clusterManager.cluster()
+
+
+
+
+
 
                                     }
                                     if (jsonresponsedata.size != 0)
                                         secondPostalcode =
                                             jsonresponsedata.elementAt(0).POSTINUMERO.toString()
-//                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
 
                                 }
 
@@ -257,12 +314,12 @@ if(postalCode == null){ postalCode == secondPostalcode}
 
     }
 
-    protected fun onBeforeClusterRendered(
-        cluster: Cluster<getdata?>?,
-        markerOptions: MarkerOptions
-    ) {
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_local_bar_24))
-    }
+//    protected fun onBeforeClusterRendered(
+//        cluster: Cluster<getdata?>?,
+//        markerOptions: MarkerOptions
+//    ) {
+//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_local_bar_24))
+//    }
 //     suspend fun getAllData() = coroutineScope {
 //         GlobalScope.launch (Dispatchers.IO) {
 //             doAsync {
@@ -334,30 +391,19 @@ if(postalCode == null){ postalCode == secondPostalcode}
 //
 //
 //     }
-////    override fun invoke(p1: MutableList<Address>) {
-////    }
-//         }
-//     }
 
     override fun invoke(p1: MutableList<Address>) {
 
     }
 
-//    inner class moro: ViewModel(){
-//        init {
-//            viewModelScope.launch {
-//                getAllData()
-//            }
-//        }
-//    }
 }
 
-inline fun dataitem(crossinline f: () -> Unit) {
-    Thread({ f() }).start()
-}
-class SimpleThread(allData: Unit) : Thread() {
-    //val mapsi = MapsActivity()
-    public override fun run() {
-    Unit
-    }
-}
+//inline fun dataitem(crossinline f: () -> Unit) {
+//    Thread({ f() }).start()
+//}
+//class SimpleThread(allData: Unit) : Thread() {
+//    //val mapsi = MapsActivity()
+//    public override fun run() {
+//    Unit
+//    }
+//}
