@@ -1,16 +1,20 @@
 package com.example.mymaps
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.mymaps.databinding.ActivityCommentBinding
 
 
 class BarFrag3 : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        var binding = ActivityCommentBinding.inflate(layoutInflater)
+
         super.onCreate(savedInstanceState)
         arguments?.let {
 

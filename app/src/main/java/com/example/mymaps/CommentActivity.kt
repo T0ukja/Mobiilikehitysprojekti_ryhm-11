@@ -34,7 +34,7 @@ class CommentActivity : AppCompatActivity() {
         markerdata = intent.getStringExtra("Ravintola")!!
 
         //  markerdata = intent.getStringExtra("Ravintola")!!
-        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(markerdata)
+        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(markerdata).child("Kommentit")
         //productList = mutableListOf()
 
         ref.addValueEventListener(object: ValueEventListener {
