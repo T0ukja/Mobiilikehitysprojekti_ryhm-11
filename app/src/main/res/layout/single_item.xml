@@ -1,0 +1,81 @@
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="7dp"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="7dp"
+                >
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="180dp"
+            android:paddingLeft="20dp"
+            android:text="TextView"
+            />
+
+                <TextView
+                    android:id="@+id/qtyTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.02"
+                    android:paddingLeft="14dp"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="kpl" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-10dp"
+                android:layout_marginBottom="-10dp"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/updateTextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text="UPDATE" />
+
+                <TextView
+                    android:id="@+id/deleteTextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-45dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text="DELETE" />
+
+
+            </LinearLayout>
+
+            <TextView
+            android:id="@+id/instanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:text="TextView"
+            android:textColor="#3C3C3C"
+            android:textStyle="italic"
+            />
+    </LinearLayout>
