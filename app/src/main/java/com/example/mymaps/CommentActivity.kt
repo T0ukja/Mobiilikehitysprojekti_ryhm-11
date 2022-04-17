@@ -2,6 +2,8 @@ package com.example.mymaps
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mymaps.adapters.ViewPagerAdapter
 import com.example.mymaps.databinding.ActivityCommentBinding
@@ -13,7 +15,8 @@ class CommentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCommentBinding
     lateinit var ref: DatabaseReference
     //  lateinit var listView: ListView
-
+lateinit var kommenttiteksti: String
+var arvosanatahti: Double = 0.0
 
     data class RestaurantFeedItem(
         val title: String = "",
@@ -38,6 +41,21 @@ class CommentActivity : AppCompatActivity() {
         //productList = mutableListOf()
 
         ref.addValueEventListener(object: ValueEventListener {
+
+
+
+//            fun ajetaanarvo(){
+//                kommenttiteksti = "Ihan jees, tää tuli ohjelmasta"
+//                arvosanatahti = 3.5
+//                val productId: String? = ref.push().key
+//                val item = kommentti(arvosanatahti, kommenttiteksti)
+//
+//                ref.child(productId.toString()).setValue(item).addOnCompleteListener{
+//                    Toast.makeText(applicationContext, "Kommentti jätetty", Toast.LENGTH_LONG).show()
+//                }
+//            }
+
+
 
             override fun onCancelled(error: DatabaseError) {
 
@@ -85,10 +103,23 @@ class CommentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommentBinding.inflate(layoutInflater)
         val view = binding.root
+
         //setContentView(R.layout.activity_comment)
         setContentView(view)
 
         setUpTabs()
+
+           var namiska = findViewById(R.id.button4) as Button
+        namiska.setOnClickListener{
+            kommenttiteksti = "Ihan jees, tää tuli ohjelmasta"
+            arvosanatahti = 3.5
+            val productId: String? = ref.push().key
+            val item = kommentti(arvosanatahti, kommenttiteksti)
+
+            ref.child(productId.toString()).setValue(item).addOnCompleteListener{
+                Toast.makeText(applicationContext, "Kommentti jätetty", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun setUpTabs() {

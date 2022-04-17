@@ -203,7 +203,7 @@ intent.putExtra("Ravintola", info)
         try {
             val success = googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.joku
+                    this, R.raw.mapstyle
                 )
             )
 
