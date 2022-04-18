@@ -222,6 +222,7 @@ intent.putExtra("Ravintola", info)
 
                 // Get the current bounds of the map's visible region.
                 val float = mMap.getCameraPosition().zoom
+                bounds = mMap.projection.visibleRegion.latLngBounds
 //                Log.d("Kamera", float.toString())
                 if (float > 13) {
 
@@ -231,7 +232,7 @@ intent.putExtra("Ravintola", info)
                     }
 
 
-                    bounds = mMap.projection.visibleRegion.latLngBounds
+
 
 
 if(float > 13.1){
@@ -286,7 +287,7 @@ if(float > 13.1){
         if (addresses != null && addresses.size > 0) {
             city = addresses[0].locality
 
-             postalCode = addresses[0]?.postalCode!!
+             postalCode = addresses[0]?.postalCode.toString()!!
 if(postalCode == null){ postalCode == secondPostalcode}
 
 
@@ -346,7 +347,7 @@ if(postalCode == null){ postalCode == secondPostalcode}
                                                 getlocation.longitude,
                                                 it.NIMI,
                                                 it.OSOITE,
-                                                R.drawable.ic_baseline_local_bar_24
+                                           //     R.drawable.ic_baseline_local_bar_24
                                             )
 
 

@@ -106,6 +106,11 @@ var arvosanatahti: Double = 0.0
 
         //setContentView(R.layout.activity_comment)
         setContentView(view)
+//        val root : View? = getView();
+//
+
+
+
 
         setUpTabs()
 
@@ -122,9 +127,15 @@ var arvosanatahti: Double = 0.0
         }
     }
 
+
+
+
+//    }
+//}
+
     private fun setUpTabs() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
-
+       // var buttona = findViewById(R.id.givecommentbtn) as Button
         //val markerdata = intent.getStringExtra("Ravintola")
 
 
@@ -136,6 +147,14 @@ var arvosanatahti: Double = 0.0
         adapter.addFragment(BarFrag3(), "Kommentit")
         binding.viewPager.adapter = adapter
         binding.bartablayout.setupWithViewPager(binding.viewPager)
+
+
+
+//        val moro = findViewById<Button>(R.id.givecommentbtn)
+//
+//        moro.setOnClickListener{
+//            Log.d("Moro", "Barfragmentista")
+//        }
 
 
     }
