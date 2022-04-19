@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mymaps.CommentActivity
+import com.example.mymaps.BarFrag3
 import com.example.mymaps.R
 
-class Myadapter(private val userlist: ArrayList<CommentActivity.kommentti>) :
+class Myadapter(private val userlist: ArrayList<BarFrag3.kommentti>) :
     RecyclerView.Adapter<Myadapter.MyViewHolder>() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Myadapter.MyViewHolder {

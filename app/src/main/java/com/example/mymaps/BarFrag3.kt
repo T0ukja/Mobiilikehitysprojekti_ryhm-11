@@ -16,8 +16,8 @@ import com.google.firebase.database.*
 
 class BarFrag3 : Fragment() {
 private lateinit var userRecyclerView: RecyclerView
-        private lateinit var userArrayList: ArrayList<CommentActivity.kommentti>
-
+       // private lateinit var userArrayList: ArrayList<kommentti>
+lateinit var Moro : List<kommentti>
     data class RestaurantFeedItem(
         val title: String = "",
         val description: String =""
@@ -67,13 +67,14 @@ lateinit var mview : View
 val moro = mview.findViewById<Button>(R.id.fab)
         moro.setOnClickListener{
             Log.d("MOro2", "Moro fragmentista")
-            userRecyclerView.adapter= Myadapter(userArrayList)
+
+//            Log.d("User arraylist", userArrayList.toString())
 
         }
         userRecyclerView = mview.findViewById(R.id.commentlist)
         userRecyclerView.layoutManager = LinearLayoutManager(mview.context)
         userRecyclerView.setHasFixedSize(true)
-userArrayList = arrayListOf<CommentActivity.kommentti>()
+// = arrayListOf<kommentti>()
    getuserdata()
         // Inflate the layout for this fragment
         return mview
@@ -131,15 +132,18 @@ userArrayList = arrayListOf<CommentActivity.kommentti>()
                        Log.d("markerdata", markerdata)
 
 
-                       val moro: List<kommentti> = snapshot.children.map { Moro ->
+                       Moro = snapshot.children.map { Moro ->
                            Moro.getValue(kommentti::class.java)!!
+
                        }
+                       userRecyclerView.adapter= Myadapter(Moro as ArrayList<kommentti>)
+                   //    userArrayList = moro as List<kommentti>
 
 //                    val RestaurantFeedItems: List<RestaurantFeedItem> = snapshot.children.map { Moro ->
 //                        Moro.getValue(RestaurantFeedItem::class.java)!!
 //                    }
                        //  Log.d("ITEMS", RestaurantFeedItems.toString())
-                       Log.d("ITEMSS", moro.toString())
+                       Log.d("ITEMSS", Moro.toString())
 //                    for(h in snapshot.children){
 //                        val product = h.getValue(RestaurantFeedItem::class.java)
 //                        Log.d("kommentti", product.toString())
