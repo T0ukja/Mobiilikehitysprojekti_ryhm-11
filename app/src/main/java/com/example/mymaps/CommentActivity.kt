@@ -135,14 +135,22 @@ var arvosanatahti: Double = 0.0
         val adapter = ViewPagerAdapter(supportFragmentManager)
        // var buttona = findViewById(R.id.givecommentbtn) as Button
         //val markerdata = intent.getStringExtra("Ravintola")
-
-
-
+        val markerdata = intent.getStringExtra("Ravintola")
+        val bundle = Bundle()
+        bundle.putString("key", markerdata)
         //  binding.moro.setText(moro)
         // Log.d("Firebase lista" , productList.size.toString())
         adapter.addFragment(BarFrag1(), markerdata.toString())
         adapter.addFragment(BarFrag2(), "Tapahtumat")
         adapter.addFragment(BarFrag3(), "Kommentit")
+
+
+
+
+        //   intent.putExtras(bundle)
+        val myFrag = BarFrag3()
+        myFrag.arguments = bundle
+supportFragmentManager.beginTransaction().commit()
         binding.viewPager.adapter = adapter
         binding.bartablayout.setupWithViewPager(binding.viewPager)
 

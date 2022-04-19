@@ -18,14 +18,28 @@ class BarFrag3 : Fragment() {
 private lateinit var userRecyclerView: RecyclerView
         private lateinit var userArrayList: ArrayList<CommentActivity.kommentti>
 
+    data class RestaurantFeedItem(
+        val title: String = "",
+        val description: String =""
+    )
+
+
+    data class kommentti(
+        val arvosana: Double = 0.0,
+        val palaute: String =""
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
 
 
 
         super.onCreate(savedInstanceState)
         var binding = ActivityCommentBinding.inflate(layoutInflater)
+//    val bundle = intent.extras
+//        val myString = args!!.getString("key").toString()
+//        Log.d("Moro mystring", myString.toString())
+
+
+
 
 //        var namiska = findViewById(R.id.givecommentbtn) as Button
 //
@@ -53,6 +67,8 @@ lateinit var mview : View
 val moro = mview.findViewById<Button>(R.id.fab)
         moro.setOnClickListener{
             Log.d("MOro2", "Moro fragmentista")
+            userRecyclerView.adapter= Myadapter(userArrayList)
+
         }
         userRecyclerView = mview.findViewById(R.id.commentlist)
         userRecyclerView.layoutManager = LinearLayoutManager(mview.context)
@@ -71,21 +87,14 @@ userArrayList = arrayListOf<CommentActivity.kommentti>()
        lateinit var kommenttiteksti: String
        var arvosanatahti: Double = 0.0
 
-       data class RestaurantFeedItem(
-           val title: String = "",
-           val description: String =""
-       )
 
+//       val args = arguments
+//val mmm = args!!.getString("key")!!
+//       Log.d("Moro markerdata", mmm)
 
-       data class kommentti(
-           val arvosana: Double = 0.0,
-           val palaute: String =""
-       )
-
-
-           markerdata = getActivity()?.getIntent()?.getExtras()?.getString("ravintolat").toString();
-           //  markerdata = intent.getStringExtra("Ravintola")!!
-           ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(markerdata).child("Kommentit")
+//           markerdata = getActivity()?.getIntent()?.getExtras()?.getString("ravintolat").toString();
+//             markerdata = intent.getStringExtra("Ravintola")!!
+           ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child("Marjuska").child("Kommentit")
            //productList = mutableListOf()
 
            ref.addValueEventListener(object: ValueEventListener {
@@ -114,7 +123,7 @@ userArrayList = arrayListOf<CommentActivity.kommentti>()
                // olemassaolevista kentistä ja asetetaan tiedon näkymän toteuttavan ja
                // oikeassa muodossa tulostavan adapterin kautta sille tarkoitetulle listalle.
 
-               override fun onDataChange(snapshot: DataSnapshot) {
+                override fun onDataChange(snapshot: DataSnapshot) {
                    if(snapshot!!.exists()){
                        //       productList.clear()
                        Log.d("SNAPSHOT", snapshot.value.toString())
@@ -149,7 +158,7 @@ userArrayList = arrayListOf<CommentActivity.kommentti>()
            });
 
 
-userRecyclerView.adapter=Myadapter(userArrayList)
+
     }
 
 
