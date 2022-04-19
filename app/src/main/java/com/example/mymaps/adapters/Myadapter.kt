@@ -31,7 +31,7 @@ return userlist.size
 
 
     class MyViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
-val comments : TextView = itemView.findViewById(R.id.comment)
-        val starrating : TextView = itemView.findViewById(R.id.stars)
+val comments : TextView = itemView.findViewById(R.id.tvKommentti)
+        val starrating : TextView = itemView.findViewById(R.id.tvPalaute)
     }
 }

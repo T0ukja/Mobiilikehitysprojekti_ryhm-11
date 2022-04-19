@@ -16,8 +16,8 @@ import com.google.firebase.database.*
 
 class BarFrag3 : Fragment() {
 private lateinit var userRecyclerView: RecyclerView
-       // private lateinit var userArrayList: ArrayList<kommentti>
-lateinit var Moro : List<kommentti>
+        private lateinit var userArrayList: ArrayList<kommentti>
+//lateinit var Moro : List<kommentti>
     data class RestaurantFeedItem(
         val title: String = "",
         val description: String =""
@@ -30,7 +30,7 @@ lateinit var Moro : List<kommentti>
     )
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
+userArrayList = arrayListOf<kommentti>()
 
         super.onCreate(savedInstanceState)
         var binding = ActivityCommentBinding.inflate(layoutInflater)
@@ -71,7 +71,7 @@ val moro = mview.findViewById<Button>(R.id.fab)
 //            Log.d("User arraylist", userArrayList.toString())
 
         }
-        userRecyclerView = mview.findViewById(R.id.commentlist)
+        userRecyclerView = mview.findViewById(R.id.kommenttiList)
         userRecyclerView.layoutManager = LinearLayoutManager(mview.context)
         userRecyclerView.setHasFixedSize(true)
 // = arrayListOf<kommentti>()
@@ -132,18 +132,27 @@ val moro = mview.findViewById<Button>(R.id.fab)
                        Log.d("markerdata", markerdata)
 
 
-                       Moro = snapshot.children.map { Moro ->
-                           Moro.getValue(kommentti::class.java)!!
-
+                       for (userSnapshots in snapshot.children){
+                           val moro = userSnapshots.getValue(kommentti::class.java)
+                           Log.d("Moro loop", moro.toString())
+                           userArrayList.add(moro!!)
                        }
-                       userRecyclerView.adapter= Myadapter(Moro as ArrayList<kommentti>)
+
+//
+//                       Moro = snapshot.children.map { Moro ->
+//                           Moro.getValue(kommentti::class.java)!!
+//
+//                       }
+
+
+                       userRecyclerView.adapter= Myadapter(userArrayList)
                    //    userArrayList = moro as List<kommentti>
 
 //                    val RestaurantFeedItems: List<RestaurantFeedItem> = snapshot.children.map { Moro ->
 //                        Moro.getValue(RestaurantFeedItem::class.java)!!
 //                    }
                        //  Log.d("ITEMS", RestaurantFeedItems.toString())
-                       Log.d("ITEMSS", Moro.toString())
+                 //      Log.d("ITEMSS", Moro.toString())
 //                    for(h in snapshot.children){
 //                        val product = h.getValue(RestaurantFeedItem::class.java)
 //                        Log.d("kommentti", product.toString())
