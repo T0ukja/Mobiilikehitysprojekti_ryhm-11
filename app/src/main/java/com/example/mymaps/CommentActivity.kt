@@ -2,6 +2,7 @@ package com.example.mymaps
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,34 +15,32 @@ class CommentActivity : AppCompatActivity() {
     var markerdata: String = ""
     private lateinit var binding: ActivityCommentBinding
     lateinit var ref: DatabaseReference
+
     //  lateinit var listView: ListView
-lateinit var kommenttiteksti: String
-var arvosanatahti: Double = 0.0
+    lateinit var kommenttiteksti: String
+    var arvosanatahti: Double = 0.0
 
     data class RestaurantFeedItem(
         val title: String = "",
-        val description: String =""
+        val description: String = ""
     )
 
 
     data class kommentti(
         val arvosana: Double = 0.0,
-        val palaute: String =""
+        val palaute: String = ""
     )
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         markerdata = intent.getStringExtra("Ravintola")!!
 
         //  markerdata = intent.getStringExtra("Ravintola")!!
-        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(markerdata).child("Kommentit")
+        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(markerdata)
+            .child("Kommentit")
         //productList = mutableListOf()
 
-        ref.addValueEventListener(object: ValueEventListener {
-
+        ref.addValueEventListener(object : ValueEventListener {
 
 
 //            fun ajetaanarvo(){
@@ -56,7 +55,6 @@ var arvosanatahti: Double = 0.0
 //            }
 
 
-
             override fun onCancelled(error: DatabaseError) {
 
             }
@@ -67,7 +65,7 @@ var arvosanatahti: Double = 0.0
             // oikeassa muodossa tulostavan adapterin kautta sille tarkoitetulle listalle.
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot!!.exists()){
+                if (snapshot!!.exists()) {
                     //       productList.clear()
                     Log.d("SNAPSHOT", snapshot.value.toString())
                     Log.d("SssssNAPSHOT", markerdata)
@@ -78,9 +76,10 @@ var arvosanatahti: Double = 0.0
                         Moro.getValue(kommentti::class.java)!!
                     }
 
-                    val RestaurantFeedItems: List<RestaurantFeedItem> = snapshot.children.map { Moro ->
-                        Moro.getValue(RestaurantFeedItem::class.java)!!
-                    }
+                    val RestaurantFeedItems: List<RestaurantFeedItem> =
+                        snapshot.children.map { Moro ->
+                            Moro.getValue(RestaurantFeedItem::class.java)!!
+                        }
                     Log.d("ITEMS", RestaurantFeedItems.toString())
                     Log.d("ITEMSS", moro.toString())
 //                    for(h in snapshot.children){
@@ -106,27 +105,40 @@ var arvosanatahti: Double = 0.0
 
         //setContentView(R.layout.activity_comment)
         setContentView(view)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setUpTabs()
 
-           var namiska = findViewById(R.id.button4) as Button
-        namiska.setOnClickListener{
+        var namiska = findViewById(R.id.button4) as Button
+        namiska.setOnClickListener {
             kommenttiteksti = "Ihan jees, tää tuli ohjelmasta"
             arvosanatahti = 3.5
             val productId: String? = ref.push().key
             val item = kommentti(arvosanatahti, kommenttiteksti)
 
-            ref.child(productId.toString()).setValue(item).addOnCompleteListener{
+            ref.child(productId.toString()).setValue(item).addOnCompleteListener {
                 Toast.makeText(applicationContext, "Kommentti jätetty", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.icLogOut)?.setVisible(false)
+        menu?.findItem(R.id.icLogin)?.setVisible(false)
+        menu?.findItem(R.id.profile)?.setVisible(false)
+        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun setUpTabs() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
 
         //val markerdata = intent.getStringExtra("Ravintola")
-
 
 
         //  binding.moro.setText(moro)

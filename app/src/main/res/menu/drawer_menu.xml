@@ -2,9 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_message"
-            android:icon="@drawable/ic_baseline_add_comment_24"
-            android:title="message"/>
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="Koti" />
+        <item
+            android:id="@+id/events"
+            android:icon="@drawable/ic_baseline_event_24"
+            android:title="Tapahtumat" />
+        <item
+            android:id="@+id/offers"
+            android:icon="@drawable/ic_baseline_local_offer_24"
+            android:title="Tarjoukset" />
+        <item
+            android:id="@+id/best"
+            android:icon="@drawable/ic_baseline_star_24"
+            android:title="Suosituimmat" />
     </group>
 
 
