@@ -142,13 +142,13 @@ var arvosanatahti: Double = 0.0
         // Log.d("Firebase lista" , productList.size.toString())
         adapter.addFragment(BarFrag1(), markerdata.toString())
         adapter.addFragment(BarFrag2(), "Tapahtumat")
-        adapter.addFragment(BarFrag3(), "Kommentit")
+        adapter.addFragment(BarFrag3(markerdata), "Kommentit")
 
 
 
 
         //   intent.putExtras(bundle)
-        val myFrag = BarFrag3()
+        val myFrag = BarFrag3(markerdata)
         myFrag.arguments = bundle
 supportFragmentManager.beginTransaction().commit()
         binding.viewPager.adapter = adapter

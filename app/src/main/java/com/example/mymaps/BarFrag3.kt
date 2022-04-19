@@ -14,7 +14,9 @@ import com.example.mymaps.databinding.ActivityCommentBinding
 import com.google.firebase.database.*
 
 
-class BarFrag3 : Fragment() {
+class BarFrag3(markerdata: String?) : Fragment() {
+
+    var tieotja = markerdata
 private lateinit var userRecyclerView: RecyclerView
         private lateinit var userArrayList: ArrayList<kommentti>
 //lateinit var Moro : List<kommentti>
@@ -82,7 +84,7 @@ val moro = mview.findViewById<Button>(R.id.fab)
     }
    private fun getuserdata(){
 
-       var markerdata: String = ""
+      // var markerdata: String = ""
        lateinit var ref: DatabaseReference
        //  lateinit var listView: ListView
        lateinit var kommenttiteksti: String
@@ -95,7 +97,7 @@ val moro = mview.findViewById<Button>(R.id.fab)
 
 //           markerdata = getActivity()?.getIntent()?.getExtras()?.getString("ravintolat").toString();
 //             markerdata = intent.getStringExtra("Ravintola")!!
-           ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child("Marjuska").child("Kommentit")
+           ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString()).child("Kommentit")
            //productList = mutableListOf()
 
            ref.addValueEventListener(object: ValueEventListener {
@@ -128,8 +130,8 @@ val moro = mview.findViewById<Button>(R.id.fab)
                    if(snapshot!!.exists()){
                        //       productList.clear()
                        Log.d("SNAPSHOT", snapshot.value.toString())
-                       Log.d("SssssNAPSHOT", markerdata)
-                       Log.d("markerdata", markerdata)
+                 //      Log.d("SssssNAPSHOT", markerdata)
+                 //      Log.d("markerdata", markerdata)
 
 
                        for (userSnapshots in snapshot.children){
