@@ -1,11 +1,13 @@
 package com.example.mymaps
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,13 +68,20 @@ lateinit var mview : View
 
         val mview: View = inflater.inflate(R.layout.fragment_bar_frag3, container, false)
 
-val moro = mview.findViewById<Button>(R.id.fab)
+        val fab = mview.findViewById<Button>(R.id.fab)
+
+        fab.setOnClickListener { view ->
+
+            showDialog()
+        }
+
+/*val moro = mview.findViewById<Button>(R.id.fab)
         moro.setOnClickListener{
             Log.d("MOro2", "Moro fragmentista")
 
 //            Log.d("User arraylist", userArrayList.toString())
 
-        }
+        }*/
         userRecyclerView = mview.findViewById(R.id.kommenttiList)
         userRecyclerView.layoutManager = LinearLayoutManager(mview.context)
         userRecyclerView.setHasFixedSize(true)
@@ -176,6 +185,30 @@ val moro = mview.findViewById<Button>(R.id.fab)
 
     }
 
+    private fun showDialog() {
+
+
+
+        val builder = AlertDialog.Builder(this.context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.kommentti_dialog, null)
+        var palauteET = dialogLayout.findViewById<EditText>(R.id.palauteET)
+        var kommenttiET = dialogLayout.findViewById<EditText>(R.id.kommenttiET)
+
+        with(builder) {
+            setTitle("Lisää arvosana ja kommentti")
+            setPositiveButton("lisää"){dialog, which ->
+
+            }
+            setNegativeButton("Palaa"){dialog, which ->
+
+            }
+            setView(dialogLayout)
+            show()
+        }
+
+
+    }
 
 
 
