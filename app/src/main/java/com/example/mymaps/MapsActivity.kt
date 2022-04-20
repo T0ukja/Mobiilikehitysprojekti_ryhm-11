@@ -5,8 +5,10 @@ package com.example.mymaps
 //import com.google.android.gms.maps.GoogleMap
 //import com.google.android.gms.maps.OnMapReadyCallback
 //import com.google.android.gms.maps.SupportMapFragment
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
@@ -18,6 +20,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.getrestaurantdata.Record
 import com.example.getrestaurantdata.ValDataone
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -153,6 +156,26 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 //clusterManager.setOnClusterClickListener(mOnClusterClickListener)
 
         mMap = googleMap
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isZoomControlsEnabled = true
 
         clusterManager = ClusterManager<getdata>(this@MapsActivity, mMap)
 //        val mRenderer = CustomClusterRenderer(this, mMap, clusterManager)
