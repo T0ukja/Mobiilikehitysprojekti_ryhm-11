@@ -24,46 +24,29 @@ class BarFrag3(markerdata: String?, loggedIn: Boolean) : Fragment() {
 
     var tieotja = markerdata
     var IsLoggedIn = loggedIn
-private lateinit var userRecyclerView: RecyclerView
-        private lateinit var userArrayList: ArrayList<kommentti>
-//lateinit var Moro : List<kommentti>
-    data class RestaurantFeedItem(
-        val title: String = "",
-        val description: String =""
-    )
-
+    private lateinit var userRecyclerView: RecyclerView
+    private lateinit var userArrayList: ArrayList<kommentti>
 
     data class kommentti(
         val arvosana: Double = 0.0,
-        val palaute: String =""
+        val palaute: String = ""
     )
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
-userArrayList = arrayListOf<kommentti>()
+        userArrayList = arrayListOf<kommentti>()
 
         super.onCreate(savedInstanceState)
         var binding = ActivityCommentBinding.inflate(layoutInflater)
-//    val bundle = intent.extras
-//        val myString = args!!.getString("key").toString()
-//        Log.d("Moro mystring", myString.toString())
 
-
-
-
-//        var namiska = findViewById(R.id.givecommentbtn) as Button
-//
-//   Button myButton = (Button) root.findViewById(R.id.givecommentbtn);
-//        super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
 
 
-
-
-
     }
-lateinit var mview : View
+
+    lateinit var mview: View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,7 +61,7 @@ lateinit var mview : View
         if (IsLoggedIn) {
             mview.findViewById<Button>(R.id.fab).visibility = View.VISIBLE
 
-        }else {
+        } else {
             mview.findViewById<Button>(R.id.fab).visibility = View.GONE
         }
 
@@ -87,121 +70,57 @@ lateinit var mview : View
             showDialog()
         }
 
-/*val moro = mview.findViewById<Button>(R.id.fab)
-        moro.setOnClickListener{
-            Log.d("MOro2", "Moro fragmentista")
 
-//            Log.d("User arraylist", userArrayList.toString())
-
-        }*/
         userRecyclerView = mview.findViewById(R.id.kommenttiList)
         userRecyclerView.layoutManager = LinearLayoutManager(mview.context)
         userRecyclerView.setHasFixedSize(true)
-// = arrayListOf<kommentti>()
-   getuserdata()
+
+        getuserdata()
         // Inflate the layout for this fragment
         return mview
 
     }
-   private fun getuserdata(){
 
-      // var markerdata: String = ""
-       lateinit var ref: DatabaseReference
-       //  lateinit var listView: ListView
-      // lateinit var kommenttiteksti: String
-      // var arvosanatahti: Double = 0.0
+    private fun getuserdata() {
 
 
-//       val args = arguments
-//val mmm = args!!.getString("key")!!
-//       Log.d("Moro markerdata", mmm)
+        lateinit var ref: DatabaseReference
 
-//           markerdata = getActivity()?.getIntent()?.getExtras()?.getString("ravintolat").toString();
-//             markerdata = intent.getStringExtra("Ravintola")!!
-           ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString()).child("Kommentit")
-           //productList = mutableListOf()
-
-           ref.addValueEventListener(object: ValueEventListener {
+        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString())
+            .child("Kommentit")
 
 
-
-//            fun ajetaanarvo(){
-//                kommenttiteksti = "Ihan jees, tää tuli ohjelmasta"
-//                arvosanatahti = 3.5
-//                val productId: String? = ref.push().key
-//                val item = kommentti(arvosanatahti, kommenttiteksti)
-//
-//                ref.child(productId.toString()).setValue(item).addOnCompleteListener{
-//                    Toast.makeText(applicationContext, "Kommentti jätetty", Toast.LENGTH_LONG).show()
-//                }
-//            }
+        ref.addValueEventListener(object : ValueEventListener {
 
 
+            override fun onCancelled(error: DatabaseError) {
 
-               override fun onCancelled(error: DatabaseError) {
-
-               }
-
-               // *YLLÄ* tietokantaan viittaavaan ref-muuttujaan asetetaan tietynlainen tiedonkuuntelija
-               // jonka avulla tietokannasta haetaan snapshot *ALLA* eli hakutulos
-               // olemassaolevista kentistä ja asetetaan tiedon näkymän toteuttavan ja
-               // oikeassa muodossa tulostavan adapterin kautta sille tarkoitetulle listalle.
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    userArrayList.clear()
-
-                   if(snapshot!!.exists()){
-                       //       productList.clear()
-                       Log.d("SNAPSHOT", snapshot.value.toString())
-                 //      Log.d("SssssNAPSHOT", markerdata)
-                 //      Log.d("markerdata", markerdata)
+            }
 
 
-                       for (userSnapshots in snapshot.children){
-                           val moro = userSnapshots.getValue(kommentti::class.java)
-                           Log.d("Moro loop", moro.toString())
-                           userArrayList.add(moro!!)
-                       }
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-//
-//                       Moro = snapshot.children.map { Moro ->
-//                           Moro.getValue(kommentti::class.java)!!
-//
-//                       }
+                userArrayList.clear()
+
+                if (snapshot!!.exists()) {
 
 
-                       userRecyclerView.adapter= Myadapter(userArrayList)
-                   //    userArrayList = moro as List<kommentti>
+                    for (userSnapshots in snapshot.children) {
+                        val userComment = userSnapshots.getValue(kommentti::class.java)
+                        userArrayList.add(userComment!!)
+                    }
 
-//                    val RestaurantFeedItems: List<RestaurantFeedItem> = snapshot.children.map { Moro ->
-//                        Moro.getValue(RestaurantFeedItem::class.java)!!
-//                    }
-                       //  Log.d("ITEMS", RestaurantFeedItems.toString())
-                 //      Log.d("ITEMSS", Moro.toString())
-//                    for(h in snapshot.children){
-//                        val product = h.getValue(RestaurantFeedItem::class.java)
-//                        Log.d("kommentti", product.toString())
-////                        productList.add(product!!)
-//                }
+                    userRecyclerView.adapter = Myadapter(userArrayList)
 
-//                    for(h in snapshot.children){
-//                        val product = h.getValue(Reviews::class.java)
-//                        productList.add(product!!)
-//                    }
-//                    val adapter = ProductAdapter(this@CommentActivity, R.layout.single_item, productList)
-//                    //listView.adapter = adapter
-                   }
-               }
+                }
+            }
 
-           });
-
+        });
 
 
     }
 
     private fun showDialog() {
-
 
         var RBrating = 0.0
         val builder = AlertDialog.Builder(this.context)
@@ -212,25 +131,25 @@ lateinit var mview : View
 
         palauteRB.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
             RBrating = rating.toDouble()
-
         }
 
 
         with(builder) {
             setTitle("Lisää arvosana ja kommentti")
             lateinit var ref: DatabaseReference
-            ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString()).child("Kommentit")
-            setPositiveButton("lisää"){dialog, which ->
-            //    println(RBrating)
+            ref =
+                FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString())
+                    .child("Kommentit")
+            setPositiveButton("lisää") { dialog, which ->
 
                 val productId: String? = ref.push().key
                 val item = CommentActivity.kommentti(RBrating, kommenttiET.text.toString())
 
-                ref.child(productId.toString()).setValue(item).addOnCompleteListener{
+                ref.child(productId.toString()).setValue(item).addOnCompleteListener {
                     Toast.makeText(this.context, "Tehtävä suoritettu", Toast.LENGTH_SHORT)
                 }
             }
-            setNegativeButton("Palaa"){dialog, which ->
+            setNegativeButton("Palaa") { dialog, which ->
 
 
             }
@@ -239,10 +158,7 @@ lateinit var mview : View
         }
 
 
-
     }
-
-
 
 
 }
