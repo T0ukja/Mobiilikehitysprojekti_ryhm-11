@@ -1,17 +1,16 @@
 package com.example.mymaps
 
+
+
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.mymaps.adapters.Myadapteroffers
-
-
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mymaps.adapters.Myadapterevents
+import com.example.mymaps.adapters.Myadapteroffers
 import com.google.firebase.database.*
 
 
@@ -68,9 +67,7 @@ class BarFrag1(markerdata: String?) : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 userArrayList.clear()
-
-                if (snapshot!!.exists()) {
-
+                if (snapshot.hasChild("Tarjoukset")) {
 
                     for (userSnapshots in snapshot.children) {
                         val userComment = userSnapshots.getValue(tarjoukset::class.java)
@@ -78,6 +75,10 @@ class BarFrag1(markerdata: String?) : Fragment() {
                     }
 
                     userRecyclerView.adapter = Myadapteroffers(userArrayList)
+                }
+               else {
+
+Log.d("Ei löydy tarjouksia", "moro")
 
                 }
             }

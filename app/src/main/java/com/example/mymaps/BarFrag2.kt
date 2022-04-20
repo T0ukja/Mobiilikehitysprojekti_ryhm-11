@@ -65,7 +65,7 @@ class BarFrag2(markerdata: String?) : Fragment() {
 
                 userArrayList.clear()
 
-                if (snapshot!!.exists()) {
+                if (snapshot.hasChild("Tapahtumat")) {
 
 
                     for (userSnapshots in snapshot.children) {
