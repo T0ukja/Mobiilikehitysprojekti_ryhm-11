@@ -49,7 +49,7 @@ class CommentActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString("key", markerdata)
 
-        adapter.addFragment(BarFrag1(), markerdata.toString())
+        adapter.addFragment(BarFrag1(markerdata), markerdata.toString())
         adapter.addFragment(BarFrag2(markerdata), "Tapahtumat")
         adapter.addFragment(BarFrag3(markerdata, loggedIn), "Kommentit")
 
