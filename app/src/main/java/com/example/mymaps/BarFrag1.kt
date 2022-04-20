@@ -67,7 +67,7 @@ class BarFrag1(markerdata: String?) : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 userArrayList.clear()
-                if (snapshot.hasChild("Tarjoukset")) {
+                if (snapshot!!.exists()) {
 
                     for (userSnapshots in snapshot.children) {
                         val userComment = userSnapshots.getValue(tarjoukset::class.java)
