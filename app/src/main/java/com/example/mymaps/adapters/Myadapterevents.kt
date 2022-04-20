@@ -14,7 +14,7 @@ class Myadapterevents(private val userlist: ArrayList<BarFrag2.tapahtuma>) :
     RecyclerView.Adapter<Myadapterevents.MyViewHolder>() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Myadapterevents.MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.user_comment, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.user_events, parent, false)
         return MyViewHolder(itemView)
     }
 

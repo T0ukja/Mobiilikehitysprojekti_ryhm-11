@@ -35,7 +35,7 @@ class BarFrag2(markerdata: String?) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val mview: View = inflater.inflate(R.layout.fragment_bar_frag2, container, false)
-       userRecyclerView = mview.findViewById(R.id.kommenttiList)
+       userRecyclerView = mview.findViewById(R.id.tapahtumalist)
        userRecyclerView.layoutManager = LinearLayoutManager(mview.context)
        userRecyclerView.setHasFixedSize(true)
 

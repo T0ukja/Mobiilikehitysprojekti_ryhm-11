@@ -19,7 +19,7 @@
             android:textSize="34sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/kommenttiList"
+            android:id="@+id/tapahtumalist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/user_events" />
@@ -27,13 +27,5 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:text="+"
-        />
 
 </FrameLayout>
