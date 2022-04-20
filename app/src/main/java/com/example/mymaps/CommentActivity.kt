@@ -50,7 +50,7 @@ class CommentActivity : AppCompatActivity() {
         bundle.putString("key", markerdata)
 
         adapter.addFragment(BarFrag1(), markerdata.toString())
-        adapter.addFragment(BarFrag2(), "Tapahtumat")
+        adapter.addFragment(BarFrag2(markerdata), "Tapahtumat")
         adapter.addFragment(BarFrag3(markerdata, loggedIn), "Kommentit")
 
 

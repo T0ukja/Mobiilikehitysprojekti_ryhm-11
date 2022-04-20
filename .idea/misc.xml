@@ -20,9 +20,12 @@
         <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_comment.xml" value="0.22" />
         <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_login.xml" value="0.1621376811594203" />
         <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_maps.xml" value="0.1621376811594203" />
+        <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/fragment_bar_frag2.xml" value="0.27760416666666665" />
         <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/fragment_bar_frag3.xml" value="0.2" />
+        <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/kommentti_dialog.xml" value="0.17980072463768115" />
         <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/single_item.xml" value="0.33" />
         <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/user_comment.xml" value="0.33" />
+        <entry key="..\:/Users/Janne/Documents/tehtavat2022/projektiperiodi/Sovellus/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/user_events.xml" value="0.32299270072992703" />
         <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/drawable/dsadasd.xml" value="0.2109375" />
         <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/drawable/ic_baseline_local_bar_24.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/Janne/StudioProjects/Mymaps/app/src/main/res/layout/activity_maps.xml" value="0.13020833333333334" />
@@ -39,10 +42,6 @@
         <entry key="..\:/Users/konst/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
         <entry key="..\:/Users/konst/bar_app/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_maps.xml" value="0.20969202898550723" />
         <entry key="..\:/Users/konst/bar_app/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/menu/top_bar.xml" value="0.25416666666666665" />
-        <entry key="..\:/rojekti1.1/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/activity_comment.xml" value="0.2625" />
-        <entry key="..\:/rojekti1.1/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/fragment_bar_frag3.xml" value="0.3203125" />
-        <entry key="..\:/rojekti1.1/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/kommentti_dialog.xml" value="0.33" />
-        <entry key="..\:/rojekti1.1/Mobiilikehitysprojekti_ryhm-11/app/src/main/res/layout/user_comment.xml" value="0.5" />
       </map>
     </option>
   </component>
