@@ -149,7 +149,7 @@ lateinit var mview : View
 
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-
+                    userArrayList.clear()
 
                    if(snapshot!!.exists()){
                        //       productList.clear()

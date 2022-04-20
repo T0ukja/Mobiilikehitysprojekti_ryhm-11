@@ -151,9 +151,9 @@ var arvosanatahti: Double = 0.0
 
 
         //   intent.putExtras(bundle)
-        val myFrag = BarFrag3(markerdata, yourBool)
+/*        val myFrag = BarFrag3(markerdata, yourBool)
         myFrag.arguments = bundle
-supportFragmentManager.beginTransaction().commit()
+supportFragmentManager.beginTransaction().commit()*/
         binding.viewPager.adapter = adapter
         binding.bartablayout.setupWithViewPager(binding.viewPager)
 
