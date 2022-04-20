@@ -1,8 +1,7 @@
 package com.example.mymaps
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mymaps.adapters.ViewPagerAdapter
 import com.example.mymaps.databinding.ActivityCommentBinding
@@ -112,7 +111,7 @@ var arvosanatahti: Double = 0.0
 
         setUpTabs()
 
-           var namiska = findViewById(R.id.button4) as Button
+/*           var namiska = findViewById(R.id.button4) as Button
         namiska.setOnClickListener{
             kommenttiteksti = "Ihan jees, tää tuli ohjelmasta"
             arvosanatahti = 3.5
@@ -122,7 +121,7 @@ var arvosanatahti: Double = 0.0
             ref.child(productId.toString()).setValue(item).addOnCompleteListener{
                 Toast.makeText(applicationContext, "Kommentti jätetty", Toast.LENGTH_LONG).show()
             }
-        }
+        }*/
     }
 
 
@@ -135,20 +134,24 @@ var arvosanatahti: Double = 0.0
         val adapter = ViewPagerAdapter(supportFragmentManager)
        // var buttona = findViewById(R.id.givecommentbtn) as Button
         //val markerdata = intent.getStringExtra("Ravintola")
+        val loggedIn: Boolean
+        val yourBool = intent.extras!!.getBoolean("IsLoggedInData")
         val markerdata = intent.getStringExtra("Ravintola")
+     //   loggedIn = intent.getBooleanExtra("IsLoggedInData", loggedIn)
+        Log.d("Kirjautumistieto:", yourBool.toString())
         val bundle = Bundle()
         bundle.putString("key", markerdata)
         //  binding.moro.setText(moro)
         // Log.d("Firebase lista" , productList.size.toString())
         adapter.addFragment(BarFrag1(), markerdata.toString())
         adapter.addFragment(BarFrag2(), "Tapahtumat")
-        adapter.addFragment(BarFrag3(markerdata), "Kommentit")
+        adapter.addFragment(BarFrag3(markerdata, yourBool), "Kommentit")
 
 
 
 
         //   intent.putExtras(bundle)
-        val myFrag = BarFrag3(markerdata)
+        val myFrag = BarFrag3(markerdata, yourBool)
         myFrag.arguments = bundle
 supportFragmentManager.beginTransaction().commit()
         binding.viewPager.adapter = adapter

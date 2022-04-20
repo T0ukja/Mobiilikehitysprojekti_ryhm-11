@@ -8,17 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RatingBar
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymaps.adapters.Myadapter
 import com.example.mymaps.databinding.ActivityCommentBinding
 import com.google.firebase.database.*
+import kotlin.reflect.jvm.internal.impl.utils.DFS
 
 
-class BarFrag3(markerdata: String?) : Fragment() {
+class BarFrag3(markerdata: String?, loggedIn: Boolean) : Fragment() {
 
     var tieotja = markerdata
+    var IsLoggedIn = loggedIn
 private lateinit var userRecyclerView: RecyclerView
         private lateinit var userArrayList: ArrayList<kommentti>
 //lateinit var Moro : List<kommentti>
@@ -68,7 +73,14 @@ lateinit var mview : View
 
         val mview: View = inflater.inflate(R.layout.fragment_bar_frag3, container, false)
 
-        val fab = mview.findViewById<Button>(R.id.fab)
+        var fab = mview.findViewById<Button>(R.id.fab)
+
+        if (IsLoggedIn) {
+            mview.findViewById<Button>(R.id.fab).visibility = View.VISIBLE
+
+        }else {
+            mview.findViewById<Button>(R.id.fab).visibility = View.GONE
+        }
 
         fab.setOnClickListener { view ->
 
@@ -96,8 +108,8 @@ lateinit var mview : View
       // var markerdata: String = ""
        lateinit var ref: DatabaseReference
        //  lateinit var listView: ListView
-       lateinit var kommenttiteksti: String
-       var arvosanatahti: Double = 0.0
+      // lateinit var kommenttiteksti: String
+      // var arvosanatahti: Double = 0.0
 
 
 //       val args = arguments
@@ -136,6 +148,9 @@ lateinit var mview : View
                // oikeassa muodossa tulostavan adapterin kautta sille tarkoitetulle listalle.
 
                 override fun onDataChange(snapshot: DataSnapshot) {
+
+
+
                    if(snapshot!!.exists()){
                        //       productList.clear()
                        Log.d("SNAPSHOT", snapshot.value.toString())
@@ -188,24 +203,41 @@ lateinit var mview : View
     private fun showDialog() {
 
 
-
+        var RBrating = 0.0
         val builder = AlertDialog.Builder(this.context)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.kommentti_dialog, null)
-        var palauteET = dialogLayout.findViewById<EditText>(R.id.palauteET)
+        var palauteRB = dialogLayout.findViewById<RatingBar>(R.id.palauteRB)
         var kommenttiET = dialogLayout.findViewById<EditText>(R.id.kommenttiET)
+
+        palauteRB.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+            RBrating = rating.toDouble()
+
+        }
+
 
         with(builder) {
             setTitle("Lisää arvosana ja kommentti")
+            lateinit var ref: DatabaseReference
+            ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString()).child("Kommentit")
             setPositiveButton("lisää"){dialog, which ->
+            //    println(RBrating)
 
+                val productId: String? = ref.push().key
+                val item = CommentActivity.kommentti(RBrating, kommenttiET.text.toString())
+
+                ref.child(productId.toString()).setValue(item).addOnCompleteListener{
+                    Toast.makeText(this.context, "Tehtävä suoritettu", Toast.LENGTH_SHORT)
+                }
             }
             setNegativeButton("Palaa"){dialog, which ->
+
 
             }
             setView(dialogLayout)
             show()
         }
+
 
 
     }

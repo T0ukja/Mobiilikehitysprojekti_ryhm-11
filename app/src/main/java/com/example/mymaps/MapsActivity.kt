@@ -196,7 +196,8 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
             Log.d("Moro, info ikkunasta", info.toString())
             val intent = Intent(this, CommentActivity::class.java)
 intent.putExtra("Ravintola", info)
-
+            intent.putExtra("IsLoggedInData", loggedIn)
+            Log.d("Logdata:", loggedIn.toString())
                 startActivity(intent)
             true
         }
