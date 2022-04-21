@@ -2,20 +2,20 @@ package com.example.mymaps
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.view.Menu
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mymaps.adapters.ViewPagerAdapter
 import com.example.mymaps.databinding.ActivityCommentBinding
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
 
 class CommentActivity : AppCompatActivity() {
-    // lateinit var productList: MutableList<Reviews>
+
     var markerdata: String = ""
     private lateinit var binding: ActivityCommentBinding
     lateinit var ref: DatabaseReference
-
     //  lateinit var listView: ListView
     lateinit var kommenttiteksti: String
     var arvosanatahti: Double = 0.0
@@ -33,6 +33,7 @@ class CommentActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         markerdata = intent.getStringExtra("Ravintola")!!
 
         //  markerdata = intent.getStringExtra("Ravintola")!!
@@ -57,12 +58,11 @@ class CommentActivity : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {
 
-            }
 
-            // *YLLÄ* tietokantaan viittaavaan ref-muuttujaan asetetaan tietynlainen tiedonkuuntelija
-            // jonka avulla tietokannasta haetaan snapshot *ALLA* eli hakutulos
-            // olemassaolevista kentistä ja asetetaan tiedon näkymän toteuttavan ja
-            // oikeassa muodossa tulostavan adapterin kautta sille tarkoitetulle listalle.
+
+        super.onCreate(savedInstanceState)
+        binding = ActivityCommentBinding.inflate(layoutInflater)
+
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot!!.exists()) {
@@ -72,9 +72,9 @@ class CommentActivity : AppCompatActivity() {
                     Log.d("markerdata", markerdata)
 
 
-                    val moro: List<kommentti> = snapshot.children.map { Moro ->
-                        Moro.getValue(kommentti::class.java)!!
-                    }
+
+        setContentView(view)
+
 
                     val RestaurantFeedItems: List<RestaurantFeedItem> =
                         snapshot.children.map { Moro ->
@@ -88,16 +88,16 @@ class CommentActivity : AppCompatActivity() {
 ////                        productList.add(product!!)
 //                }
 
-//                    for(h in snapshot.children){
-//                        val product = h.getValue(Reviews::class.java)
-//                        productList.add(product!!)
-//                    }
-//                    val adapter = ProductAdapter(this@CommentActivity, R.layout.single_item, productList)
-//                    //listView.adapter = adapter
-                }
-            }
 
-        });
+
+
+
+
+        setUpTabs()
+
+
+    }
+
 
         super.onCreate(savedInstanceState)
         binding = ActivityCommentBinding.inflate(layoutInflater)
@@ -135,10 +135,25 @@ class CommentActivity : AppCompatActivity() {
         return super.onPrepareOptionsMenu(menu)
     }
 
+
     private fun setUpTabs() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
+        val loggedIn = intent.extras!!.getBoolean("IsLoggedInData")
+        val markerdata = intent.getStringExtra("Ravintola")
+        var teksti = findViewById<TextView>(R.id.barname)
+        teksti.setText(markerdata)
+        Log.d("Kirjautumistieto:", loggedIn.toString())
+        val bundle = Bundle()
+        bundle.putString("key", markerdata)
 
-        //val markerdata = intent.getStringExtra("Ravintola")
+        adapter.addFragment(BarFrag1(markerdata), "Tarjoukset")
+        adapter.addFragment(BarFrag2(markerdata), "Tapahtumat")
+        adapter.addFragment(BarFrag3(markerdata, loggedIn), "Kommentit")
+
+
+
+
+
 
 
         //  binding.moro.setText(moro)
@@ -146,6 +161,7 @@ class CommentActivity : AppCompatActivity() {
         adapter.addFragment(BarFrag1(), markerdata.toString())
         adapter.addFragment(BarFrag2(), "Tapahtumat")
         adapter.addFragment(BarFrag3(), "Kommentit")
+
         binding.viewPager.adapter = adapter
         binding.bartablayout.setupWithViewPager(binding.viewPager)
 
