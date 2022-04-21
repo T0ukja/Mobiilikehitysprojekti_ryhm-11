@@ -1,10 +1,6 @@
 package com.example.mymaps
 
 
-//import androidx.appcompat.app.AppCompatActivity
-//import com.google.android.gms.maps.GoogleMap
-//import com.google.android.gms.maps.OnMapReadyCallback
-//import com.google.android.gms.maps.SupportMapFragment
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -12,7 +8,6 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -46,16 +41,12 @@ import retrofit2.Response
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
-  //  private lateinit var mMap: GoogleMap
     private lateinit var auth: FirebaseAuth
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var lastLocation: Location
-    lateinit var toggle: ActionBarDrawerToggle
+   lateinit var toggle: ActionBarDrawerToggle
         var loggedIn = false
 
-    companion object {
-        private const val LOCATION_REQUEST_CODE = 1
-    }
+
     private lateinit var mMap: GoogleMap
     var jsonresponsedata: List<Record> = mutableListOf()
     var secondPostalcode: String = ""
@@ -153,7 +144,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
     @SuppressLint("SuspiciousIndentation")
     override fun onMapReady(googleMap: GoogleMap) {
-//clusterManager.setOnClusterClickListener(mOnClusterClickListener)
+
 
         mMap = googleMap
 
@@ -165,50 +156,17 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return
         }
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
 
         clusterManager = ClusterManager<getdata>(this@MapsActivity, mMap)
-//        val mRenderer = CustomClusterRenderer(this, mMap, clusterManager)
-//        mRende
-       // clusterManager.setRenderer(mRenderer)
+
 
         clusterManager.setAnimation(true)
-     //   map.setOnMarkerClickListener(mClusterManager);
 
-
-//        clusterManager.setOnClusterItemClickListener { getdata ->
-//
-//
-//            val clusterRender = clusterManager.renderer as DefaultClusterRenderer
-//
-//
-//         val moro = clusterRender.getMarker(getdata).title
-//
-//
-//            clusterRender.getMarker(getdata).showInfoWindow()
-//        Log.d("Moro, titteli", moro.toString())
-//
-//
-//
-//
-//
-////
-////            beachMarker.isSelected = true
-////            val marker = clusterRender.getMarker(beachMarker)
-////            clusterRender.onClusterItemChange(beachMarker, marker)
-////            lastSelectedBeachMarker = beachMarker
-//            true
-//        }
         clusterManager.setOnClusterItemInfoWindowClickListener() { getdata ->
 
 
@@ -216,13 +174,11 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
 
  val info = clusterRender.getMarker(getdata).title
-            Log.d("Moro, info ikkunasta", info.toString())
             val intent = Intent(this, CommentActivity::class.java)
 intent.putExtra("Ravintola", info)
             intent.putExtra("IsLoggedInData", loggedIn)
-            Log.d("Logdata:", loggedIn.toString())
                 startActivity(intent)
-            true
+
         }
 
         try {
@@ -248,7 +204,6 @@ intent.putExtra("Ravintola", info)
                 // Get the current bounds of the map's visible region.
                 val float = mMap.getCameraPosition().zoom
                 bounds = mMap.projection.visibleRegion.latLngBounds
-//                Log.d("Kamera", float.toString())
                 if (float > 13) {
 
                     GlobalScope.launch (Dispatchers.Main) {
@@ -298,11 +253,7 @@ if(float > 13.1){
 
 
     private fun luearvot() {
-//        var markerBitmap =
-//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
-//                ?.toBitmap()
-//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-     //    val arvoja = moro()
+
         val geocoder = Geocoder(this@MapsActivity)
         val lon = mMap.cameraPosition.target.longitude
         val lat = mMap.cameraPosition.target.latitude
@@ -332,23 +283,13 @@ if(postalCode == null){ postalCode == secondPostalcode}
                     with(Api) {
                         retrofitService.getAllData(totalAddress)
                             .enqueue(object : Callback<ValDataone> {
-                                //    @RequiresApi(33)
+
                                 override fun onResponse(
                                     call: Call<ValDataone>,
                                     response: Response<ValDataone>
                                 ) {
                                     if (response.isSuccessful) {
 
-                                        //  val adapter = moshi.adapter<List<Record>>()
-                                        // val cards: List<Record> = adapter.fromJson(Datarecord)
-
-                                        // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
-
-                                        //  val adapter = moshi.adapter<List<String>>(type)
-                                        //  val moshi = Moshi.Builder()
-                                        // .add(KotlinJsonAdapterFactory())
-                                        // .build()
-                                        //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
 
 
                                         jsonresponsedata = response.body()?.result?.records!!
@@ -380,14 +321,8 @@ if(postalCode == null){ postalCode == secondPostalcode}
 
 
                                         }
-//                                        render = CustomClusterRenderer(this@MapsActivity, mMap, clusterManager)
-//                                        clusterManager.setRenderer(render)
+
 clusterManager.cluster()
-
-
-
-
-
 
 
                                     }
@@ -403,163 +338,12 @@ clusterManager.cluster()
                                 }
                             })
 
-
-          //          }
-
-//arvoja.viewModelScope.coroutineContext
                 }
-             //   }).start()
-
-
-/*
-
-Firebase branchista
-
-
- setupMap()
-
-
-    }
-
-    private fun setupMap() {
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            ActivityCompat.requestPermissions(
-                this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_REQUEST_CODE
-            )
-            return
-        }
-        mMap.isMyLocationEnabled = true
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-
-            if (location != null) {
-                lastLocation = location
-                val currentLatLong = LatLng(location.latitude, location.longitude)
-                //placeMarkerOnMap(currentLatLong)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 12f))
-
-
- */
-
 
             }
 
         }
-
-
-
     }
-
-/*
-Firebasesta 
-
-    private fun placeMarkerOnMap(currentLatLng: LatLng) {
-        val markerOptions = MarkerOptions().position(currentLatLng)
-        markerOptions.title("$currentLatLng")
-        mMap.addMarker((markerOptions))
-    }
-
-
-
- */
-
-//    override fun onMarkerClick(p0: Marker) = false{
-//}
-
-
-
-//   protected fun onBeforeClusterRendered(
-//        cluster: Cluster<getdata?>?,
-//        markerOptions: MarkerOptions
-//    ) {
-//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_local_bar_24))
-//    }
-//     suspend fun getAllData() = coroutineScope {
-//         GlobalScope.launch (Dispatchers.IO) {
-//             doAsync {
-////        var markerBitmap =
-////            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
-////                ?.toBitmap()
-////        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-//       //  val listener = GeocodeListener(this@MapsActivity)
-//    val geocoder = Geocoder(this@MapsActivity)
-//
-//    with(Api) {
-//        retrofitService.getAllData(totalAddress).enqueue(object : Callback<ValDataone> {
-//        //    @RequiresApi(33)
-//            override fun onResponse(call: Call<ValDataone>, response: Response<ValDataone>) {
-//                if (response.isSuccessful) {
-//
-//                    //  val adapter = moshi.adapter<List<Record>>()
-//                    // val cards: List<Record> = adapter.fromJson(Datarecord)
-//
-//                    // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
-//
-//                    //  val adapter = moshi.adapter<List<String>>(type)
-//                    //  val moshi = Moshi.Builder()
-//                    // .add(KotlinJsonAdapterFactory())
-//                    // .build()
-//                    //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
-//
-//
-//                    jsonresponsedata = response.body()?.result?.records!!
-//                    jsonresponsedata.stream().forEach() {
-//
-//
-//
-//
-//                        try {
-//
-//
-//                                val location = geocoder.getFromLocationName(it.OSOITE,1
-//                                )
-//                            getlocation = location.first()
-//
-//                        } catch (e: Exception) {
-//                         //   Log.d("Virhe", "Ei toimi")
-//                        }
-//
-//                        val dataitem = getdata(getlocation.latitude,getlocation.longitude, it.NIMI, it.OSOITE, R.drawable.ic_baseline_local_bar_24)
-//                        clusterManager.addItem(dataitem)
-//
-//
-//
-//                    }
-//
-//                  clusterManager.cluster()
-//
-//                }
-//                if(jsonresponsedata.size != 0)
-//                    secondPostalcode = jsonresponsedata.elementAt(0).POSTINUMERO.toString()
-////                Log.d("jsonresponse.lastindex", jsonresponsedata.lastIndex.toString())
-//
-//            }
-//
-//            override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-//                t.printStackTrace()
-//                Log.i("virhe", "virhe")
-//            }
-//        })
-//
-//}
-//
-//
-//     }
-
-//    override fun invoke(p1: MutableList<Address>) {
-//
-//    }
-
-
-
-
-
 
     override fun invoke(p1: MutableList<Address>) {
 
@@ -567,12 +351,3 @@ Firebasesta
 
 }
 
-//inline fun dataitem(crossinline f: () -> Unit) {
-//    Thread({ f() }).start()
-//}
-//class SimpleThread(allData: Unit) : Thread() {
-//    //val mapsi = MapsActivity()
-//    public override fun run() {
-//    Unit
-//    }
-//}

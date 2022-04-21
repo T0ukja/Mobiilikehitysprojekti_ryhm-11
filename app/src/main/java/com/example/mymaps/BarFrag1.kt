@@ -15,7 +15,7 @@ import com.google.firebase.database.*
 
 
 class BarFrag1(markerdata: String?) : Fragment() {
-    var tieotja = markerdata
+    var restaurantname = markerdata
 
     private lateinit var userRecyclerView: RecyclerView
     private lateinit var userArrayList: ArrayList<tarjoukset>
@@ -52,7 +52,7 @@ class BarFrag1(markerdata: String?) : Fragment() {
 
         lateinit var ref: DatabaseReference
 
-        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(tieotja.toString())
+        ref = FirebaseDatabase.getInstance().getReference("Ravintolat").child(restaurantname.toString())
             .child("Tarjoukset")
 
 
