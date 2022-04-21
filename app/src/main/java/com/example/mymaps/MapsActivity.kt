@@ -320,7 +320,7 @@ if(postalCode == null){ postalCode == secondPostalcode}
             if (!postalCode.equals(secondPostalcode) && postalCode != null) {
                 // Thread(Runnable{
 
-<<<<<<< HEAD
+
                     with(Api) {
                         retrofitService.getAllData(totalAddress)
                             .enqueue(object : Callback<ValDataone> {
@@ -347,14 +347,8 @@ if(postalCode == null){ postalCode == secondPostalcode}
                                         try {
 
 
-
-                                            val dataitem = getdata(
-                                                getlocation.latitude,
-                                                getlocation.longitude,
-                                                it.NIMI,
-                                                it.OSOITE,
-                                           //     R.drawable.ic_baseline_local_bar_24
-
+                                            val location = geocoder.getFromLocationName(
+                                                it.OSOITE, 1
                                             )
                                             getlocation = location.first()
 
@@ -362,14 +356,22 @@ if(postalCode == null){ postalCode == secondPostalcode}
                                             //   Log.d("Virhe", "Ei toimi")
                                         }
 
-clusterManager.cluster()
 
+                                        val dataitem = getdata(
+                                            getlocation.latitude,
+                                            getlocation.longitude,
+                                            it.NIMI,
+                                            it.OSOITE,
+                                            //     R.drawable.ic_baseline_local_bar_24
+                                        )
+
+
+                                        clusterManager.addItem(dataitem)
 
 
                                     }
-//                                        render = CustomClusterRenderer(this@MapsActivity, mMap, clusterManager)
-//                                        clusterManager.setRenderer(render)
-                                    clusterManager.cluster()
+
+                                        clusterManager.cluster()
 
 
                                 }
@@ -379,14 +381,14 @@ clusterManager.cluster()
 
                             }
 
+                                override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+                                    Log.i("virhe", "virhe")
+                                }
 
-                }
 
-                            override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-                                t.printStackTrace()
-                                Log.i("virhe", "virhe")
-                            }
-                        })
+                            })
+                    }
+
 
 
                     //          }
@@ -438,12 +440,16 @@ Firebase branchista
 
         }
 
-    }
-
-
     override fun invoke(p1: MutableList<Address>) {
 
     }
 
 }
+
+
+//    override fun invoke(p1: MutableList<Address>) {
+//
+//    }
+
+
 
