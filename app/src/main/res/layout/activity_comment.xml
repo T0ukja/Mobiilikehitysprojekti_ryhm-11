@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".CommentActivity">
 
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/barname"
         android:layout_width="409dp"
@@ -19,6 +24,10 @@
         app:layout_constraintTop_toTopOf="@+id/viewPager"
         tools:ignore="MissingConstraints" />
 
+
+
+
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/bartablayout"
         android:layout_width="match_parent"
@@ -29,6 +38,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabBackground="@color/cardview_dark_background"
         app:tabTextColor="@color/white" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/viewPager"
+        app:layout_constraintStart_toStartOf="@+id/viewPager"
+        app:layout_constraintTop_toTopOf="@+id/viewPager" />
 
     <!-- <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -70,5 +88,4 @@
             android:text="Button" />
     </androidx.viewpager.widget.ViewPager>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-    <!--android:background="@drawable/tausta"/>-->
+</LinearLayout><!--android:background="@drawable/tausta"/>-->

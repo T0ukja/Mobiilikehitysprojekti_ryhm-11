@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.example.getrestaurantdata.Record
 import com.example.getrestaurantdata.ValDataone
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -40,21 +42,26 @@ import retrofit2.Response
 
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, (MutableList<Address>) -> Unit {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener, (MutableList<Address>) -> Unit {
     private lateinit var auth: FirebaseAuth
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+  //  private lateinit var lastLocation: Location
    lateinit var toggle: ActionBarDrawerToggle
         var loggedIn = false
+
+//    companion object {
+//        private const val LOCATION_REQUEST_CODE = 1
+//    }
 
 
     private lateinit var mMap: GoogleMap
     var jsonresponsedata: List<Record> = mutableListOf()
     var secondPostalcode: String = ""
     lateinit var postalCode: String
-   lateinit var city: String
+    lateinit var city: String
     lateinit var totalAddress: String
     var addressList: MutableList<String> = mutableListOf()
-lateinit var getlocation: Address
+    lateinit var getlocation: Address
     private lateinit var clusterManager: ClusterManager<getdata>
     lateinit var bounds: LatLngBounds
 
@@ -80,6 +87,7 @@ lateinit var getlocation: Address
         onStartUp()
         loggedIn = onStartUp()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient((this))
+        setNavigationViewListener()
 
     }
 
@@ -88,8 +96,8 @@ lateinit var getlocation: Address
         return true
     }
 
-   
-override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.icLogOut)?.setVisible(false)
         if (intent.hasExtra("loggedIn")) {
             loggedIn = intent.extras?.get("loggedIn") as Boolean
@@ -103,10 +111,47 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         return true
     }
 
+    private fun setNavigationViewListener() {
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val eventFrag: Fragment = EventFragment()
+        val bestFrag: Fragment = BestFragment()
+        val offerFrag: Fragment = OfferFragment()
+        when (item.itemId) {
+            R.id.events -> {
+                supportFragmentManager.popBackStackImmediate()
+                supportFragmentManager.beginTransaction().replace(R.id.map, eventFrag)
+                    .addToBackStack("events")
+                    .commit()
+                println(supportFragmentManager.fragments)
+                return true
+            }
+            R.id.home -> {
+                supportFragmentManager.popBackStackImmediate()
+                return true
+            }
+            R.id.offers -> {
+                supportFragmentManager.popBackStackImmediate()
+                supportFragmentManager.beginTransaction().replace(R.id.map, offerFrag)
+                    .addToBackStack("offers").commit()
+                return true
+            }
+            R.id.best -> {
+                supportFragmentManager.popBackStackImmediate()
+                supportFragmentManager.beginTransaction().replace(R.id.map, bestFrag)
+                    .addToBackStack("best").commit()
+                return true
+            }
+        }
+        return true
+    }
+
     private fun reload() {
 
     }
-
 
 
     private fun onStartUp(): Boolean {
@@ -114,13 +159,16 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         val siEmail = currentUser?.email
-        Toast.makeText(this, "Sisäänkirjauduttu spostilla " + siEmail.toString(), Toast.LENGTH_SHORT).show()
-        if(currentUser != null){
+        Toast.makeText(
+            this,
+            "Sisäänkirjauduttu spostilla " + siEmail.toString(),
+            Toast.LENGTH_SHORT
+        ).show()
+        if (currentUser != null) {
             reload()
             return true
-        }else return false
+        } else return false
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
@@ -164,8 +212,8 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
         clusterManager = ClusterManager<getdata>(this@MapsActivity, mMap)
 
-
         clusterManager.setAnimation(true)
+
 
         clusterManager.setOnClusterItemInfoWindowClickListener() { getdata ->
 
@@ -178,6 +226,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 intent.putExtra("Ravintola", info)
             intent.putExtra("IsLoggedInData", loggedIn)
                 startActivity(intent)
+
 
         }
 
@@ -200,13 +249,12 @@ intent.putExtra("Ravintola", info)
             mMap.setOnCameraIdleListener {
 
 
-
                 // Get the current bounds of the map's visible region.
                 val float = mMap.getCameraPosition().zoom
                 bounds = mMap.projection.visibleRegion.latLngBounds
                 if (float > 13) {
 
-                    GlobalScope.launch (Dispatchers.Main) {
+                    GlobalScope.launch(Dispatchers.Main) {
                         luearvot()
 
                     }
@@ -215,16 +263,13 @@ intent.putExtra("Ravintola", info)
 
 
 
-if(float > 13.1){
-    clusterManager.cluster()
+                    if (float > 13.1) {
+                        clusterManager.cluster()
 
-}
-
-
+                    }
 
 
-                }
-                    else {
+                } else {
                     clusterManager.clearItems()
                     clusterManager.cluster()
                     addressList.clear()
@@ -233,26 +278,22 @@ if(float > 13.1){
                 }
 
 
-
-
-
-
             }
 
 
-    }
+        }
 
 
     }
-
-
-
-
-
-
 
 
     private fun luearvot() {
+
+//        var markerBitmap =
+//            ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_local_bar_24, null)
+//                ?.toBitmap()
+//        val icon = markerBitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+        //    val arvoja = moro()
 
         val geocoder = Geocoder(this@MapsActivity)
         val lon = mMap.cameraPosition.target.longitude
@@ -263,8 +304,11 @@ if(float > 13.1){
         if (addresses != null && addresses.size > 0) {
             city = addresses[0].locality
 
+
              postalCode = addresses[0]?.postalCode.toString()!!
 if(postalCode == null){ postalCode == secondPostalcode}
+
+
 
 
             Log.d("Postinumero", postalCode)
@@ -274,12 +318,9 @@ if(postalCode == null){ postalCode == secondPostalcode}
 
 
             if (!postalCode.equals(secondPostalcode) && postalCode != null) {
-               // Thread(Runnable{
+                // Thread(Runnable{
 
-
-              //  withContext(Dispatchers.IO) {
-                    clusterManager.clearItems()
-
+<<<<<<< HEAD
                     with(Api) {
                         retrofitService.getAllData(totalAddress)
                             .enqueue(object : Callback<ValDataone> {
@@ -290,23 +331,22 @@ if(postalCode == null){ postalCode == secondPostalcode}
                                 ) {
                                     if (response.isSuccessful) {
 
+                                    // val type = Types.newParameterizedType(List::class.java, List<Record>::class.java)
+
+                                    //  val adapter = moshi.adapter<List<String>>(type)
+                                    //  val moshi = Moshi.Builder()
+                                    // .add(KotlinJsonAdapterFactory())
+                                    // .build()
+                                    //val allNames: List<String>? = adapter.fromJson(response.body()?.result?.records)
 
 
-                                        jsonresponsedata = response.body()?.result?.records!!
-                                        jsonresponsedata.stream().forEach() {
+                                    jsonresponsedata = response.body()?.result?.records!!
+                                    jsonresponsedata.stream().forEach() {
 
 
-                                            try {
+                                        try {
 
 
-                                                val location = geocoder.getFromLocationName(
-                                                    it.OSOITE, 1
-                                                )
-                                                getlocation = location.first()
-
-                                            } catch (e: Exception) {
-                                                //   Log.d("Virhe", "Ei toimi")
-                                            }
 
                                             val dataitem = getdata(
                                                 getlocation.latitude,
@@ -314,36 +354,92 @@ if(postalCode == null){ postalCode == secondPostalcode}
                                                 it.NIMI,
                                                 it.OSOITE,
                                            //     R.drawable.ic_baseline_local_bar_24
+
                                             )
+                                            getlocation = location.first()
 
-
-                                            clusterManager.addItem(dataitem)
-
-
+                                        } catch (e: Exception) {
+                                            //   Log.d("Virhe", "Ei toimi")
                                         }
 
 clusterManager.cluster()
 
 
+
                                     }
-                                    if (jsonresponsedata.size != 0)
-                                        secondPostalcode =
-                                            jsonresponsedata.elementAt(0).POSTINUMERO.toString()
+//                                        render = CustomClusterRenderer(this@MapsActivity, mMap, clusterManager)
+//                                        clusterManager.setRenderer(render)
+                                    clusterManager.cluster()
+
 
                                 }
+                                if (jsonresponsedata.size != 0)
+                                    secondPostalcode =
+                                        jsonresponsedata.elementAt(0).POSTINUMERO.toString()
 
-                                override fun onFailure(call: Call<ValDataone>, t: Throwable) {
-                                    t.printStackTrace()
-                                    Log.i("virhe", "virhe")
-                                }
-                            })
+                            }
+
 
                 }
+
+                            override fun onFailure(call: Call<ValDataone>, t: Throwable) {
+                                t.printStackTrace()
+                                Log.i("virhe", "virhe")
+                            }
+                        })
+
+
+                    //          }
+
+//arvoja.viewModelScope.coroutineContext
+                }
+                //   }).start()
+
+
+/*
+
+Firebase branchista
+
+
+ setupMap()
+
+
+    }
+
+    private fun setupMap() {
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(
+                this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_REQUEST_CODE
+            )
+            return
+        }
+        mMap.isMyLocationEnabled = true
+        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+
+            if (location != null) {
+                lastLocation = location
+                val currentLatLong = LatLng(location.latitude, location.longitude)
+                //placeMarkerOnMap(currentLatLong)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 12f))
+
+
+ */
+
+
 
             }
 
         }
+
     }
+
 
     override fun invoke(p1: MutableList<Address>) {
 
