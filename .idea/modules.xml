@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mobiilikehitysprojekti_ryhm-11.Mymaps.app.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Mymaps.iml" filepath="$PROJECT_DIR$/.idea/modules/Mymaps.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mymaps.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mymaps.app.iml" />
     </modules>

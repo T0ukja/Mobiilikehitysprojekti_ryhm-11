@@ -67,6 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Sign In"
+        android:textColor="@color/white"
+        android:background="@color/primary"
         app:layout_constraintEnd_toEndOf="@+id/etPassword"
         app:layout_constraintStart_toStartOf="@+id/etPassword"
         app:layout_constraintTop_toBottomOf="@+id/cbShowPW" />
@@ -76,7 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Don't have an account yet? Sign Up here"
-        android:textColor="@color/teal_700"
+        android:textColor="@color/primary"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

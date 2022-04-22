@@ -22,7 +22,7 @@ class SignUpActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        val etUsernameSU = findViewById<EditText>(R.id.etUsernameSU)
+
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPasswordSU = findViewById<EditText>(R.id.etPasswordSU)
         val etCPasswordSU = findViewById<EditText>(R.id.etCPasswordSU)
@@ -33,8 +33,8 @@ class SignUpActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         btnSignUp.setOnClickListener() {
-            if (etUsernameSU.text.trim().isNotEmpty() && etPasswordSU.text.isNotEmpty() &&
-                etEmail.text.trim().isNotEmpty() && etCPasswordSU.text.isNotEmpty()
+            if (etPasswordSU.text.isNotEmpty() && etEmail.text.trim().isNotEmpty()
+                && etCPasswordSU.text.isNotEmpty()
             ) {
                 if (etPasswordSU.text.toString() == etCPasswordSU.text.toString()) {
                     val email = etEmail.text.toString().trim()

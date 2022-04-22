@@ -159,12 +159,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,NavigationView.OnNa
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         val siEmail = currentUser?.email
-        Toast.makeText(
-            this,
-            "Sisäänkirjauduttu spostilla " + siEmail.toString(),
-            Toast.LENGTH_SHORT
-        ).show()
         if (currentUser != null) {
+            Toast.makeText(
+                this,
+                "Sisäänkirjauduttu spostilla " + siEmail.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
             reload()
             return true
         } else return false
