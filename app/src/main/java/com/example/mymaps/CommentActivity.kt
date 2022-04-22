@@ -20,10 +20,6 @@ class CommentActivity : AppCompatActivity() {
     lateinit var kommenttiteksti: String
     var arvosanatahti: Double = 0.0
 
-    data class RestaurantFeedItem(
-        val title: String = "",
-        val description: String = ""
-    )
 
 
     data class kommentti(
@@ -35,22 +31,6 @@ class CommentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
-
-        //  markerdata = intent.getStringExtra("Ravintola")!!
-
-        //productList = mutableListOf()
-
-
-//            fun ajetaanarvo(){
-//                kommenttiteksti = "Ihan jees, tää tuli ohjelmasta"
-//                arvosanatahti = 3.5
-//                val productId: String? = ref.push().key
-//                val item = kommentti(arvosanatahti, kommenttiteksti)
-//
-//                ref.child(productId.toString()).setValue(item).addOnCompleteListener{
-//                    Toast.makeText(applicationContext, "Kommentti jätetty", Toast.LENGTH_LONG).show()
-//                }
-//            }
 
 
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymaps.BarFrag3
@@ -21,7 +22,7 @@ class Myadapter(private val userlist: ArrayList<BarFrag3.kommentti>) :
        val currentitem = userlist[position]
 
         holder.comments.text= currentitem.palaute
-        holder.starrating.text= currentitem.arvosana.toString()
+        holder.starrating.rating= currentitem.arvosana.toFloat()
     }
 
     override fun getItemCount(): Int {
@@ -32,6 +33,6 @@ return userlist.size
 
     class MyViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
 val comments : TextView = itemView.findViewById(R.id.tvKommentti)
-        val starrating : TextView = itemView.findViewById(R.id.tvPalaute)
+        val starrating : RatingBar = itemView.findViewById(R.id.tvPalaute)
     }
 }

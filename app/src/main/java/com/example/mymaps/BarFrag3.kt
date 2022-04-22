@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
 import androidx.fragment.app.Fragment
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymaps.adapters.Myadapter
 import com.example.mymaps.databinding.ActivityCommentBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 
 
@@ -51,13 +51,14 @@ class BarFrag3(markerdata: String?, loggedIn: Boolean) : Fragment() {
 
         val mview: View = inflater.inflate(R.layout.fragment_bar_frag3, container, false)
 
-        val fab = mview.findViewById<Button>(R.id.fab)
+        val fab = mview.findViewById<FloatingActionButton>(R.id.fab)
 
         if (IsLoggedIn) {
-            mview.findViewById<Button>(R.id.fab).visibility = View.VISIBLE
-
+          //  mview.findViewById<Button>(R.id.fab).visibility = View.VISIBLE
+fab.show()
         } else {
-            mview.findViewById<Button>(R.id.fab).visibility = View.GONE
+           // mview.findViewById<Button>(R.id.fab).visibility = View.GONE
+            fab.hide()
         }
 
         fab.setOnClickListener { view ->
@@ -147,8 +148,12 @@ class BarFrag3(markerdata: String?, loggedIn: Boolean) : Fragment() {
 
 
             }
+
             setView(dialogLayout)
+
             show()
+
+
         }
 
 
